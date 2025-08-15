@@ -1,5 +1,5 @@
 .mat-toolbar {
-  background-color: #bb5f0a;
+  background-color: #0c59be;
   color: white;
   height: 56px;
 }
@@ -20,7 +20,7 @@
 .sidenav-logo-container{
     display: flex;
     align-items: center;
-    border-bottom: 1px solid rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
     height: 56px;
     padding-left: 16px;
     padding-right: 16px;
@@ -41,11 +41,20 @@
         height: 48px;
         display: flex;
         align-items: center;
+        cursor: pointer;
 
         &:hover{
-        background-color: rgba(0,0,0,0.1);
-    }
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        &:focus{
+            outline: none;
+        }
     }
 
-    
+}
+
+.router-container{
+    padding-left: 56px;
+    padding-top: 16px;
 }

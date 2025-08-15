@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>ADD User</h2>
+<mat-dialog-content class="dialog-main-container">
+  <div class="dialog-name-container">
+    <mat-form-field appearance="outline" class="mrg-16">
+      <mat-label>First Name</mat-label>
+      <input [(ngModel)]="user.firstName" matInput placeholder="Placeholder" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Last Name</mat-label>
+      <input [(ngModel)]="user.lastName" matInput placeholder="Placeholder" />
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Birth Date</mat-label>
+      <input [(ngModel)]="user.birthDate" matInput placeholder="Placeholder" [matDatepicker]="picker"/>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div class="dialog-name-container">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Street + House No.</mat-label>
+      <input [(ngModel)]="user.street" matInput placeholder="Placeholder" />
+    </mat-form-field>
+  </div>
+  <div class="dialog-name-container">
+    <mat-form-field appearance="outline" class="mrg-16">
+      <mat-label>Zip Code</mat-label>
+      <input [(ngModel)]="user.zipCode" matInput placeholder="Placeholder" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>City</mat-label>
+      <input [(ngModel)]="user.city" matInput placeholder="Placeholder" />
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="dialog-btn-container">
+    <button matButton (click)="onNoClick()">Cancel</button>
+    <button matButton (click)="saveUser()" [mat-dialog-close]="" cdkFocusInitial>Save</button>
+  </div>
+</mat-dialog-actions>
