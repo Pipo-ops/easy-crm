@@ -12,6 +12,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
 import {provideNativeDateAdapter} from '@angular/material/core';
+import { UserDetailComponent } from './user-detail/user-detail.component';
 
 export const appConfig: ApplicationConfig = {
   
@@ -22,7 +23,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter([
       { path: '', component: DashboardComponent },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'user', component: UserComponent }
+      { path: 'user', component: UserComponent },
+      { path: 'user-detail/:id', component: UserDetailComponent },
   ]),
     provideClientHydration(),
     provideAnimationsAsync(),

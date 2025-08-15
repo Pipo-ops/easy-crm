@@ -8,6 +8,13 @@ import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.compo
 import { User } from '../../models/user.class'; 
 import { FormsModule } from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { inject } from '@angular/core'; 
+import { Observable } from 'rxjs';
+import { collectionData } from '@angular/fire/firestore';
+import { AsyncPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -20,6 +27,8 @@ import {MatCardModule} from '@angular/material/card';
     MatDialogModule,
     FormsModule,
     MatCardModule,
+    AsyncPipe,
+    CommonModule,
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
@@ -27,12 +36,19 @@ import {MatCardModule} from '@angular/material/card';
 export class UserComponent {
 
   user = new User();
+  allUsers$: Observable<User[]>; // ⬅️ async observable
+  firestore = inject(Firestore);
 
-  constructor(public dialog: MatDialog) {
-
+  constructor(public dialog: MatDialog, private router: Router) {
+    const userCollection = collection(this.firestore, 'users');
+    this.allUsers$ = collectionData(userCollection, { idField: 'id' }) as Observable<User[]>;
   }
 
   openDialog() {
     this.dialog.open(DialogAddUserComponent)
+  }
+
+  goToUser(userId: string) {
+    this.router.navigate(['/user-detail', userId]);
   }
 }

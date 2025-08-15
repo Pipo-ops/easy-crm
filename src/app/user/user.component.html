@@ -1,19 +1,14 @@
-<mat-card>
+<mat-card *ngIf="allUsers$ | async as allUsers">
   <table class="user-table">
     <tr>
       <th>Name</th>
       <th>E-Mail</th>
       <th>City</th>
     </tr>
-    <tr>
-      <td>Hans</td>
-      <td>hansAgmail.com</td>
-      <td>Wien</td>
-    </tr>
-    <tr>
-      <td>Hans</td>
-      <td>hansAgmail.com</td>
-      <td>Wien</td>
+    <tr *ngFor="let user of allUsers" (click)="goToUser(user.id)">
+      <td>{{ user.firstName }} {{ user.lastName }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.city }}</td>
     </tr>
   </table>
 </mat-card>

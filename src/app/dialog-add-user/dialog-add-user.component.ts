@@ -9,6 +9,7 @@ import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-add-user',
@@ -32,7 +33,7 @@ export class DialogAddUserComponent {
   birthDate: Date;
   loading = false;
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialogRef: MatDialogRef<DialogAddUserComponent>) {
     this.birthDate = new Date();
   }
 
@@ -45,14 +46,15 @@ export class DialogAddUserComponent {
     try {
       const userCollection = collection(this.firestore, 'users');
       await addDoc(userCollection, { ...this.user });
-      console.log('User saved');
     } catch (error) {
       console.error('Error adding user: ', error);
     } finally {
       this.loading = false;
-
-      this.user = new User();
-      this.birthDate = new Date();
+      this.dialogRef.close();
     }
+  }
+
+  closeDialog(){
+    this.dialogRef.close();
   }
 }
