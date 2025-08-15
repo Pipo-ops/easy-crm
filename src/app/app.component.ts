@@ -7,8 +7,6 @@ import {MatIconModule} from '@angular/material/icon';
 import { UserComponent } from './user/user.component';
 import { DashboardComponent } from './dashboard/dashboard.component'
 import {MatButtonModule} from '@angular/material/button';
-import { Firestore } from '@angular/fire/firestore';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -23,13 +21,10 @@ import { AsyncPipe } from '@angular/common';
     UserComponent,
     DashboardComponent,
     MatButtonModule,
-    AsyncPipe
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  firestore: Firestore = inject(Firestore);
-
   title = 'easy-crm';
 }

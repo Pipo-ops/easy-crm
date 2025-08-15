@@ -1,11 +1,55 @@
-.add-user-btn{
-    position: absolute;
-    right: 56px;
-    bottom: 56px;
-    border-radius: 100px;
-    border-color: #0c59be;
-    height: 80px;
-    width: 80px;
-    background-color: #0c59be;
+.add-user-btn {
+  position: absolute;
+  right: 56px;
+  bottom: 56px;
+  border-radius: 100px;
+  border-color: #0c59be;
+  height: 80px;
+  width: 80px;
+  background-color: #0c59be;
+  cursor: pointer;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+    &:first-child {
+      cursor: unset;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
     cursor: pointer;
+
+    td {
+      height: 48px;
+
+      &:first-child {
+        padding-left: 16px;
+      }
+    }
+
+    th {
+      &:first-child {
+        padding-left: 16px;
+      }
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  th {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: start;
+  }
 }
