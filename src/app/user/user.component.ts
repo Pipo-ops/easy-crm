@@ -36,7 +36,7 @@ import { Router } from '@angular/router';
 export class UserComponent {
 
   user = new User();
-  allUsers$: Observable<User[]>; // ⬅️ async observable
+  allUsers$: Observable<User[]>; 
   firestore = inject(Firestore);
 
   constructor(public dialog: MatDialog, private router: Router) {

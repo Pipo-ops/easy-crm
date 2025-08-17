@@ -1,9 +1,42 @@
-<ng-container *ngIf="user$ | async as user; else loading">
-  <h2>{{ user.firstName }} {{ user.lastName }}</h2>
-  <p><strong>Email:</strong> {{ user.email }}</p>
-  <p><strong>City:</strong> {{ user.city }}</p>
-  <p><strong>Birthdate:</strong> {{ user.birthDate | date }}</p>
-</ng-container>
+<mat-card
+  class="user-detail-header"
+  *ngIf="user; else loading"
+>
+  <div class="user-detail-header-container">
+    <button mat-icon-button class="pin-right-upper-corner" [matMenuTriggerFor]="userMenu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="editUserDetail()">Edit</button>
+    </mat-menu>  
+    <div>
+      <img
+        class="profil-img"
+        src="./../../assets/img/profil-img/user-icon.png"
+        alt=""
+      />
+    </div>
+    <div class="user-detail-header-text">
+      <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+      <span>{{ user.email }}</span>
+    </div>
+  </div>
+</mat-card>
+
+<mat-card class="address-container mrgt-32" *ngIf="user">
+    <button mat-icon-button class="pin-right-upper-corner" [matMenuTriggerFor]="addressMenu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #addressMenu="matMenu">
+      <button mat-menu-item (click)="editAddressMenu()">Edit</button>
+    </mat-menu>  
+    <h2>Address</h2>
+    <mat-card-content>
+      <p>{{ user.street }}</p>
+      <p>{{ user.zipCode }} {{ user.city }}</p>
+    </mat-card-content>
+</mat-card>
 
 <ng-template #loading>
   <p>Loading user...</p>

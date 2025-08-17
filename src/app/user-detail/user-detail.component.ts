@@ -1,29 +1,63 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Firestore, doc, docData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogEditUserComponent } from '../dialog-edit-user/dialog-edit-user.component';
+import { DialogEditAddressComponent } from '../dialog-edit-address/dialog-edit-address.component';
 
 @Component({
   selector: 'app-user-detail',
   standalone: true,
   imports: [
     CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
   ],
   templateUrl: './user-detail.component.html',
   styleUrl: './user-detail.component.scss',
 })
-export class UserDetailComponent {
-  
-  route = inject(ActivatedRoute);
-  firestore = inject(Firestore);
+export class UserDetailComponent implements OnInit {
+  user: User = new User();
+  userId: string | null = null;
 
-  user$: Observable<User>;
+  constructor(
+    private route: ActivatedRoute,
+    private firestore: Firestore,
+    public dialog: MatDialog
+  ) {}
 
-  constructor() {
-    const userId = this.route.snapshot.paramMap.get('id')!;
-    const userDoc = doc(this.firestore, `users/${userId}`);
-    this.user$ = docData(userDoc) as Observable<User>;
+  async ngOnInit() {
+    this.route.paramMap.subscribe(async (paramMap) => {
+      this.userId = paramMap.get('id');
+      if (this.userId) {
+        let userDocRef = doc(this.firestore, `users/${this.userId}`);
+        let userSnap = await getDoc(userDocRef);
+        if (userSnap.exists()) {
+          this.user = userSnap.data() as User;
+        } else {
+          console.error('User not found!');
+        }
+      }
+    });
+  }
+
+  editUserDetail() {
+    this.dialog.open(DialogEditUserComponent);
+  }
+
+  editAddressMenu() {
+    const dialogRef = this.dialog.open<DialogEditAddressComponent>(
+      DialogEditAddressComponent
+    );
+    dialogRef.componentInstance.user = this.user;
   }
 }
