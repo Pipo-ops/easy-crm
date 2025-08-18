@@ -3,8 +3,6 @@ import { provideRouter } from '@angular/router';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { firebaseConfig } from '../environments/firebase.config';
-
-import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatToolbarModule } from '@angular/material/toolbar';

@@ -6,8 +6,9 @@
     <button mat-icon-button class="pin-right-upper-corner" [matMenuTriggerFor]="userMenu">
         <mat-icon>more_vert</mat-icon>
     </button>
-    <mat-menu #userMenu="matMenu">
+    <mat-menu #userMenu="matMenu" class="mrg-16">
       <button mat-menu-item (click)="editUserDetail()">Edit</button>
+      <button mat-menu-item class="delete-btn" (click)="deleteUserDetail()">Delete</button>
     </mat-menu>  
     <div>
       <img
@@ -28,7 +29,7 @@
         <mat-icon>more_vert</mat-icon>
     </button>
 
-    <mat-menu #addressMenu="matMenu">
+    <mat-menu #addressMenu="matMenu" class="mrg-16">
       <button mat-menu-item (click)="editAddressMenu()">Edit</button>
     </mat-menu>  
     <h2>Address</h2>

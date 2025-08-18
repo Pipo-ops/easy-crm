@@ -43,6 +43,11 @@ export class DialogAddUserComponent {
     this.user.birthDate = this.birthDate.getTime();
     this.loading = true;
 
+    this.user.firstName = this.capitalize(this.user.firstName);
+    this.user.lastName = this.capitalize(this.user.lastName);
+    this.user.street = this.capitalize(this.user.street);
+    this.user.city = this.capitalize(this.user.city);
+
     try {
       const userCollection = collection(this.firestore, 'users');
       await addDoc(userCollection, { ...this.user });
@@ -54,7 +59,11 @@ export class DialogAddUserComponent {
     }
   }
 
-  closeDialog(){
+  capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  closeDialog() {
     this.dialogRef.close();
   }
 }
