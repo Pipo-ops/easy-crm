@@ -1,6 +1,6 @@
 <div class="dialog-container">
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
-  <h2 mat-dialog-title>ADD User</h2>
+  <h2 mat-dialog-title>Kunden Bearbeiten</h2>
   <mat-dialog-content class="dialog-main-container">
     <div class="dialog-name-container">
       <mat-form-field appearance="outline" class="mrg-16 mrgt-16">
@@ -10,6 +10,12 @@
       <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
         <input [disabled]="loading" [(ngModel)]="user.lastName" matInput />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Firma</mat-label>
+        <input [disabled]="loading" [(ngModel)]="user.company" matInput />
       </mat-form-field>
     </div>
     <div>

@@ -21,39 +21,44 @@
   }
 }
 
-.user-detail-header-text{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    margin-left: 32px;
-    gap: 8px;
+.user-detail-header-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-left: 32px;
+  gap: 8px;
 
-    h2{
-        margin-bottom: 0;
-        font-size: 32px;
-    }
+  .company-name {
+    font-size: 38px;
+    margin-bottom: 10px;
+  }
 
-    span{
-        font-size: 18px;
-        color: rgb(255, 255, 255);
-    }
+  h2 {
+    margin-bottom: 0;
+    font-size: 24px;
+  }
+
+  span {
+    font-size: 18px;
+    color: rgb(255, 255, 255);
+  }
 }
 
-.address-container{
-    h2{
-        margin-left: 16px;
-        margin-top: 16px;
-        font-size: 24px;
-    }
+.address-container {
+  h2 {
+    margin-left: 16px;
+    margin-top: 16px;
+    font-size: 24px;
+  }
 }
 
-.pin-right-upper-corner{
-    position: absolute;
-    right: 0;
-    top: 0;
+.pin-right-upper-corner {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
-.delete-btn{
-    color: rgb(255, 0, 0);
+.delete-btn {
+  color: rgb(255, 0, 0);
 }

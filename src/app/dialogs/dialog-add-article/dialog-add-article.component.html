@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>Neuer Artikel</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="name" [disabled]="loading" />
+  </mat-form-field>
+
+  <div class="grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Gewicht/Stk (kg)</mat-label>
+      <input matInput type="number" [(ngModel)]="gewicht" [disabled]="loading">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Stk/Kiste</mat-label>
+      <input matInput type="number" [(ngModel)]="stueck" [disabled]="loading">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Länge (cm)</mat-label>
+      <input matInput type="number" [(ngModel)]="laenge" [disabled]="loading">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Breite (cm)</mat-label>
+      <input matInput type="number" [(ngModel)]="breite" [disabled]="loading">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Kisten-Gewicht (kg)</mat-label>
+      <input matInput type="number" [(ngModel)]="kistenGewicht" [disabled]="loading">
+    </mat-form-field>
+  </div>
+
+  <div class="upload">
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" [disabled]="loading">
+    <img *ngIf="preview" [src]="preview" alt="Vorschau">
+  </div>
+
+  <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+</mat-dialog-content>
+
+<mat-dialog-actions class="action-btn" align="end">
+  <button mat-button (click)="close()" [disabled]="loading">Abbrechen</button>
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="loading">Speichern</button>
+</mat-dialog-actions>
