@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Neue Kategorie</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full"><mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="name" [disabled]="loading" />
+  </mat-form-field>
+
+  <div class="upload">
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" [disabled]="loading" />
+    <img *ngIf="previewUrl" [src]="previewUrl" alt="preview" />
+  </div>
+
+  <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="loading">Abbrechen</button>
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="loading">Speichern</button>
+</mat-dialog-actions>

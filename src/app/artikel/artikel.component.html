@@ -1,0 +1,26 @@
+<div class="category-list" *ngIf="categories$ | async as categories">
+  <mat-card class="category-card" *ngFor="let c of categories">
+    <!-- Header mit Aktionen -->
+    <div class="card-header">
+      <button mat-icon-button aria-label="Bearbeiten" (click)="editCategory(c); $event.stopPropagation()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Löschen" (click)="deleteCategory(c); $event.stopPropagation()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Bild -->
+    <img *ngIf="c.image; else noimg" [src]="c.image" [alt]="c.name" />
+    <ng-template #noimg><div class="noimg"></div></ng-template>
+
+    <!-- Footer mit Name -->
+    <div class="card-footer">
+      <h3>{{ c.name }}</h3>
+    </div>
+  </mat-card>
+</div>
+
+<button class="add-fab" mat-fab color="primary" matTooltip="Kategorie anlegen" (click)="openDialog()">
+  <mat-icon>add</mat-icon>
+</button>

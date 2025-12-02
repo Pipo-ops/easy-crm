@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../models/user.class';
+import { User } from '../../../models/user.class';
 import { doc, setDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';

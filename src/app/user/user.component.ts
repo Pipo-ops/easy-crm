@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
+import { DialogAddUserComponent } from '../dialogs/dialog-add-user/dialog-add-user.component';
 import { User } from '../../models/user.class'; 
 import { FormsModule } from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';

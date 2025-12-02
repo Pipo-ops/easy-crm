@@ -9,8 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogEditUserComponent } from '../dialog-edit-user/dialog-edit-user.component';
-import { DialogEditAddressComponent } from '../dialog-edit-address/dialog-edit-address.component';
+import { DialogEditUserComponent } from '../dialogs/dialog-edit-user/dialog-edit-user.component';
+import { DialogEditAddressComponent } from '../dialogs/dialog-edit-address/dialog-edit-address.component';
 import { Router } from '@angular/router';
 
 @Component({
