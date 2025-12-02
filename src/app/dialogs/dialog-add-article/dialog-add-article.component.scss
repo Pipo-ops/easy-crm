@@ -3,6 +3,12 @@
   margin-top: 20px;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
 .upload {
   margin: 12px 0;
   display: grid;
@@ -18,11 +24,11 @@
 
 .error {
   color: #c62828;
-  margin-top: 8px;
+  margin: 4px 0 0;
 }
 
-.action-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.action-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

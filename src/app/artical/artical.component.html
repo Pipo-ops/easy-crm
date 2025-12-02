@@ -1,0 +1,64 @@
+<!-- Ladevorgang -->
+<ng-container *ngIf="vm$ | async as vm; else loadingTpl">
+  <div class="detail">
+    <!-- Hero oben: Bild + Name -->
+    <header class="hero" *ngIf="vm.category">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <img *ngIf="vm?.category?.image" [src]="vm?.category?.image" alt="" />
+        <h1>{{ vm?.category?.name || "Kategorie" }}</h1>
+      </div>
+    </header>
+
+    <!-- Artikel der Kategorie -->
+    <section class="article-list" *ngIf="(vm?.articles?.length ?? 0) > 0; else emptyTpl">
+  <mat-card class="article-card"
+            *ngFor="let a of vm?.articles; trackBy: trackById"
+            (click)="viewArticle(a)">
+    <!-- Header mit Aktionen -->
+    <div class="card-header">
+      <button mat-icon-button aria-label="Bearbeiten"
+              (click)="editArticle(vm.categoryId, a); $event.stopPropagation()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Löschen"
+              (click)="deleteArticle(vm.categoryId, a); $event.stopPropagation()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Bild -->
+    <img *ngIf="a?.image; else noimg" [src]="a?.image!" [alt]="a?.name ?? ''" />
+    <ng-template #noimg><div class="noimg"></div></ng-template>
+
+    <!-- Footer mit Name -->
+    <div class="card-footer">
+      <h3>{{ a?.name }}</h3>
+    </div>
+  </mat-card>
+</section>
+  </div>
+</ng-container>
+
+<!-- Loading -->
+<ng-template #loadingTpl>
+  <div class="loading"><mat-icon>hourglass_empty</mat-icon> Lädt…</div>
+</ng-template>
+
+<!-- Empty -->
+<ng-template #emptyTpl>
+  <div class="empty">
+    <mat-icon>inbox</mat-icon>
+    <p>Keine Artikel vorhanden.</p>
+  </div>
+</ng-template>
+
+<button
+  class="add-fab"
+  mat-fab
+  color="primary"
+  matTooltip="Artikel anlegen"
+  (click)="openDialog()"
+>
+  <mat-icon>add</mat-icon>
+</button>

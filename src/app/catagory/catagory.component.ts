@@ -11,15 +11,16 @@ import { collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { DialogAddCategoryComponent } from '../dialogs/dialog-add-category/dialog-add-category.component';
 import { DialogEditCategoryComponent } from '../dialogs/dialog-edit-category/dialog-edit-category.component';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-artikel',
+  selector: 'app-catagory',
   standalone: true,
   imports: [CommonModule, AsyncPipe, MatCardModule, MatIconModule, MatButtonModule, MatTooltipModule, MatDialogModule],
-  templateUrl: './artikel.component.html',
-  styleUrl: './artikel.component.scss'
+  templateUrl: './catagory.component.html',
+  styleUrl: './catagory.component.scss'
 })
-export class ArtikelComponent {
+export class CatagoryComponent {
   private firestore = inject(Firestore);
   private dialog = inject(MatDialog);
 
@@ -28,6 +29,12 @@ export class ArtikelComponent {
   constructor() {
     const catRef = collection(this.firestore, 'categories');
     this.categories$ = collectionData(catRef, { idField: 'id' }) as Observable<any[]>;
+  }
+
+  private router = inject(Router);
+
+  goToCategory(id: string) {
+    this.router.navigate(['/category', id]);
   }
 
   openDialog() {

@@ -1,5 +1,5 @@
 <div class="category-list" *ngIf="categories$ | async as categories">
-  <mat-card class="category-card" *ngFor="let c of categories">
+  <mat-card class="category-card" *ngFor="let c of categories" (click)="goToCategory(c.id)">
     <!-- Header mit Aktionen -->
     <div class="card-header">
       <button mat-icon-button aria-label="Bearbeiten" (click)="editCategory(c); $event.stopPropagation()">

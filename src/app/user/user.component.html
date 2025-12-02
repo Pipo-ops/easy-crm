@@ -1,11 +1,13 @@
 <mat-card *ngIf="allUsers$ | async as allUsers">
   <table class="user-table">
     <tr>
+      <th>Firma</th>
       <th>Name</th>
       <th>E-Mail</th>
       <th>City</th>
     </tr>
     <tr *ngFor="let user of allUsers" (click)="goToUser(user.id)">
+      <td>{{ user.company }}</td>
       <td>{{ user.firstName }} {{ user.lastName }}</td>
       <td>{{ user.email }}</td>
       <td>{{ user.city }}</td>
@@ -13,6 +15,6 @@
   </table>
 </mat-card>
 
-<button mat-fab color="primary" matTooltip="add User" matTooltipPosition="above" class="add-fab">
+<button mat-fab color="primary" matTooltip="Kunden Hinzufügen" matTooltipPosition="above" class="add-fab" (click)="openDialog()">
   <mat-icon>add</mat-icon>
 </button>

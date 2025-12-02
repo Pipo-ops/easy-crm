@@ -1,0 +1,38 @@
+.full {
+  width: 100%;
+  margin-top: 20px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.upload {
+  margin: 12px 0;
+  display: grid;
+  gap: 8px;
+}
+.upload-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.upload img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.error {
+  color: #c62828;
+  margin: 6px 0 0;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+.action-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

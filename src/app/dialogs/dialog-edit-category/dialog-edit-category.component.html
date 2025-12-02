@@ -13,7 +13,7 @@
   <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
   <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
+<mat-dialog-actions class="action-btn" align="end">
   <button mat-button (click)="close()" [disabled]="loading">Abbrechen</button>
   <button mat-flat-button color="primary" (click)="save()" [disabled]="loading">Speichern</button>
 </mat-dialog-actions>

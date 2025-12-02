@@ -11,9 +11,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserComponent } from './user/user.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { UserDetailComponent } from './user-detail/user-detail.component';
-import { ArtikelComponent } from './artikel/artikel.component';
+import { CatagoryComponent } from './catagory/catagory.component';
 import { TruckRoutesComponent } from './truck-routes/truck-routes.component';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { ArticalComponent } from './artical/artical.component';
+import { LkwComponent } from './lkw/lkw.component';
 
 export const appConfig: ApplicationConfig = {
   
@@ -23,13 +25,16 @@ export const appConfig: ApplicationConfig = {
     provideDatabase(() => getDatabase()), 
 
     provideRouter([
-      { path: '', component: DashboardComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'user', component: UserComponent },
       { path: 'user-detail/:id', component: UserDetailComponent },
-      { path: 'article', component: ArtikelComponent },
+      { path: 'category', component: CatagoryComponent },
+      { path: 'category/:id', component: ArticalComponent }, 
+      { path: 'lkw', component: LkwComponent },
       { path: 'truck-routes', component: TruckRoutesComponent },
-  ]),
+    ]),
+    
     provideClientHydration(),
     provideAnimationsAsync(),
     MatToolbarModule,
