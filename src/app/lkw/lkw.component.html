@@ -1,1 +1,28 @@
-<p>lkw works!</p>
+<div class="lkw-list" *ngIf="trucks$ | async as trucks">
+  <mat-card class="lkw-card" *ngFor="let t of trucks">
+    
+    <div class="card-header">
+      <button mat-icon-button aria-label="Bearbeiten" (click)="editLkw(t); $event.stopPropagation()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Löschen" (click)="deleteLkw(t); $event.stopPropagation()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <img *ngIf="t.image; else noimg" [src]="t.image" [alt]="t.name" />
+    <ng-template #noimg><div class="noimg"></div></ng-template>
+
+    <div class="card-footer">
+      <h3>{{ t.name }}</h3>
+      <div class="meta">
+        <span *ngIf="t.length && t.width">{{ t.length }}×{{ t.width }} m ({{ t.area || (t.length * t.width) | number:'1.0-2' }} m²)</span>
+        <span *ngIf="t.maxWeight">• max {{ t.maxWeight | number }} kg</span>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<button class="add-fab" mat-fab color="primary" matTooltip="LKW anlegen" (click)="addLkw()">
+  <mat-icon>add</mat-icon>
+</button>
