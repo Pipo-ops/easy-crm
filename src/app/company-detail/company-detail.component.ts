@@ -3,18 +3,18 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Firestore, getDoc } from '@angular/fire/firestore';
 import { deleteDoc, doc } from '@angular/fire/firestore';
-import { User } from '../../models/user.class';
+import { Company } from '../../models/company.class';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogEditUserComponent } from '../dialogs/dialog-edit-user/dialog-edit-user.component';
+import { DialogEditCompanyComponent } from '../dialogs/dialog-edit-company/dialog-edit-company.component';
 import { DialogEditAddressComponent } from '../dialogs/dialog-edit-address/dialog-edit-address.component';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-user-detail',
+  selector: 'app-company-detail',
   standalone: true,
   imports: [
     CommonModule,
@@ -23,12 +23,12 @@ import { Router } from '@angular/router';
     MatButtonModule,
     MatMenuModule,
   ],
-  templateUrl: './user-detail.component.html',
-  styleUrl: './user-detail.component.scss',
+  templateUrl: './company-detail.component.html',
+  styleUrl: './company-detail.component.scss',
 })
-export class UserDetailComponent implements OnInit {
-  user: User = new User();
-  userId: string | null = null;
+export class CompanyDetailComponent implements OnInit {
+  company: Company = new Company();
+  companyId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,12 +39,12 @@ export class UserDetailComponent implements OnInit {
 
   async ngOnInit() {
     this.route.paramMap.subscribe(async (paramMap) => {
-      this.userId = paramMap.get('id');
-      if (this.userId) {
-        let userDocRef = doc(this.firestore, `users/${this.userId}`);
-        let userSnap = await getDoc(userDocRef);
-        if (userSnap.exists()) {
-          this.user = userSnap.data() as User;
+      this.companyId = paramMap.get('id');
+      if (this.companyId) {
+        let companyDocRef = doc(this.firestore, `companies/${this.companyId}`);
+        let companySnap = await getDoc(companyDocRef);
+        if (companySnap.exists()) {
+          this.company = companySnap.data() as Company;
         } else {
           console.error('User not found!');
         }
@@ -52,28 +52,27 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
-  editUserDetail() {
-    const dialogRef = this.dialog.open<DialogEditUserComponent>(
-      DialogEditUserComponent
+  editCompanyDetail() {
+    const dialogRef = this.dialog.open<DialogEditCompanyComponent>(
+      DialogEditCompanyComponent
     );
-    dialogRef.componentInstance.user = this.user;
-    dialogRef.componentInstance.userId = this.userId!;
+    dialogRef.componentInstance.company = this.company;
+    dialogRef.componentInstance.companyId = this.companyId!;
   }
 
-  async deleteUserDetail() {
-    if (!this.userId) return;
+  async deleteCompanyDetail() {
+    if (!this.companyId) return;
 
-    const userDocRef = doc(this.firestore, `users/${this.userId}`);
-    await deleteDoc(userDocRef);
-
-    this.router.navigate(['/user']);
+    const companyDocRef = doc(this.firestore, `companies/${this.companyId}`);
+    await deleteDoc(companyDocRef);
+    this.router.navigate(['/company']);
   }
 
   editAddressMenu() {
     const dialogRef = this.dialog.open<DialogEditAddressComponent>(
       DialogEditAddressComponent
     );
-    dialogRef.componentInstance.user = this.user;
-    dialogRef.componentInstance.userId = this.userId!;
+    dialogRef.componentInstance.company = this.company;
+    dialogRef.componentInstance.companyId = this.companyId!;
   }
 }

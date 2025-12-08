@@ -4,10 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DialogAddUserComponent } from '../dialogs/dialog-add-user/dialog-add-user.component';
-import { User } from '../../models/user.class'; 
+import { DialogAddCompanyComponent } from '../dialogs/dialog-add-company/dialog-add-company.component';
+import { Company } from '../../models/company.class'; 
 import { FormsModule } from '@angular/forms';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core'; 
 import { Observable } from 'rxjs';
@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-user',
+  selector: 'app-company',
   standalone: true,
   imports: [
     RouterModule, 
@@ -30,25 +30,25 @@ import { Router } from '@angular/router';
     AsyncPipe,
     CommonModule,
   ],
-  templateUrl: './user.component.html',
-  styleUrl: './user.component.scss',
+  templateUrl: './company.component.html',
+  styleUrl: './company.component.scss',
 })
-export class UserComponent {
+export class CompanyComponent {
 
-  user = new User();
-  allUsers$: Observable<User[]>; 
+  company = new Company();
+  allCompanies$: Observable<Company[]>; 
   firestore = inject(Firestore);
 
   constructor(public dialog: MatDialog, private router: Router) {
-    const userCollection = collection(this.firestore, 'users');
-    this.allUsers$ = collectionData(userCollection, { idField: 'id' }) as Observable<User[]>;
+    const companyCollection = collection(this.firestore, 'companies');
+    this.allCompanies$ = collectionData(companyCollection, { idField: 'id' }) as Observable<Company[]>;
   }
 
   openDialog() {
-    this.dialog.open(DialogAddUserComponent)
+    this.dialog.open(DialogAddCompanyComponent)
   }
 
-  goToUser(userId: string) {
-    this.router.navigate(['/user-detail', userId]);
+  goToCompany(companyId: string) {
+    this.router.navigate(['/company-detail', companyId]);
   }
 }

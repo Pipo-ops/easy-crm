@@ -1,0 +1,20 @@
+<mat-card *ngIf="allCompanies$ | async as allCompanies">
+  <table class="company-table">
+    <tr>
+      <th>Firma</th>
+      <th>Kontaktperson</th>
+      <th>E-Mail</th>
+      <th>City</th>
+    </tr>
+    <tr *ngFor="let company of allCompanies" (click)="goToCompany(company.id)">
+      <td>{{ company.company }}</td>
+      <td>{{ company.firstName }} {{ company.lastName }}</td>
+      <td>{{ company.email }}</td>
+      <td>{{ company.city }}</td>
+    </tr>
+  </table>
+</mat-card>
+
+<button mat-fab color="primary" matTooltip="Kunden Hinzufügen" matTooltipPosition="above" class="add-fab" (click)="openDialog()">
+  <mat-icon>add</mat-icon>
+</button>

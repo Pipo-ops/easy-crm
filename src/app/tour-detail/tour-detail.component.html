@@ -1,0 +1,346 @@
+<ng-container *ngIf="tour$ | async as tour; else loadingTpl">
+  <main class="tour-detail">
+    <!-- Header / Hero -->
+    <header class="tour-header">
+      <section class="title-row">
+        <button mat-icon-button (click)="goBack()" aria-label="Zurück">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <section class="headline">
+          <h1>{{ tour.name || "Tour" }}</h1>
+          <p class="subtitle">
+            <span>Am:</span> {{ tour.date | date : "dd.MM.yyyy" }} <br />
+            <span>Uhrzeit:</span> {{ tour.startTime }} - {{ tour.endTime }}
+            <br />
+            <span>Erstellt von:</span> {{ tour.person }}
+          </p>
+        </section>
+      </section>
+
+      <p class="note" *ngIf="tour.note">
+        <mat-icon>notes</mat-icon>
+        {{ tour.note }}
+      </p>
+    </header>
+
+    <section class="calc-section">
+      <!-- Beladung kalkulieren -->
+      <mat-card class="calc-card">
+        <mat-card-title>Beladung kalkulieren</mat-card-title>
+        <mat-card-content>
+          <section class="form-row">
+            <!-- Kategorie -->
+            <mat-form-field appearance="outline">
+              <mat-label>Kategorie</mat-label>
+              <mat-select
+                [(ngModel)]="selectedCategory"
+                (selectionChange)="onCategoryChange($event.value)"
+              >
+                <mat-option [value]="null">– Wählen –</mat-option>
+                <mat-option *ngFor="let c of categories$ | async" [value]="c">
+                  {{ c.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Artikel -->
+            <mat-form-field appearance="outline">
+              <mat-label>Artikel</mat-label>
+              <mat-select
+                [(ngModel)]="selectedArticle"
+                (selectionChange)="onArticleChange($event.value)"
+                [disabled]="!(articles$ | async)?.length"
+              >
+                <mat-option [value]="null">– Wählen –</mat-option>
+                <mat-option *ngFor="let a of articles$ | async" [value]="a">
+                  {{ a.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Stückzahl -->
+            <mat-form-field appearance="outline">
+              <mat-label>Stückzahl</mat-label>
+              <input
+                matInput
+                type="number"
+                min="1"
+                [(ngModel)]="amount"
+                (ngModelChange)="onAmountChange()"
+              />
+            </mat-form-field>
+
+            <!-- Hinzufügen -->
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="addBoxes()"
+              [disabled]="!selectedArticle || amount <= 0"
+            >
+              Hinzufügen
+            </button>
+          </section>
+
+          <!-- Preview für aktuelle Eingabe -->
+          <section class="preview" *ngIf="previewArea || previewWeight">
+            <p>
+              <strong>Ladefläche (Eingabe):</strong>
+              {{ previewArea | number : "1.2-2" }} m²
+            </p>
+            <p>
+              <strong>Gesamtgewicht (Eingabe):</strong>
+              {{ previewWeight | number : "1.2-2" }} kg
+            </p>
+          </section>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Verfügbare LKWs -->
+      <mat-card class="trucks-card">
+        <mat-card-title>Verfügbare LKWs</mat-card-title>
+        <mat-card-content>
+          <section
+            class="truck-strip"
+            *ngIf="trucks$ | async as trucks; else noTrucksTpl"
+          >
+            <article
+              class="truck-card"
+              *ngFor="let t of trucks; trackBy: trackTruck"
+              [class.selected]="isSelected(t)"
+              (click)="toggleTruck(t)"
+            >
+              <ng-container *ngIf="t.image; else noTruckImg">
+                <img [src]="t.image" [alt]="t.name" />
+              </ng-container>
+              <ng-template #noTruckImg>
+                <section class="truck-placeholder">LKW</section>
+              </ng-template>
+
+              <h3 class="truck-name">
+                {{ t.name | shortText : 14 }}
+              </h3>
+            </article>
+          </section>
+
+          <!-- Infozeile -->
+          <footer class="truck-footer" *ngIf="boxes.length">
+            <p>
+              Benötigte LKWs (min.):
+              <strong *ngIf="neededTrucks !== null; else notPossible">
+                {{ neededTrucks }}
+              </strong>
+              <ng-template #notPossible>
+                <span>nicht möglich mit aktuellen LKWs</span>
+              </ng-template>
+            </p>
+
+            <p>
+              Kapazität ausgewählte LKWs:
+              <strong
+                [class.ok]="hasEnoughArea && hasEnoughWeight"
+                [class.bad]="!hasEnoughArea || !hasEnoughWeight"
+              >
+                {{ selectedArea | number : "1.2-2" }} m² /
+                {{ totalArea | number : "1.2-2" }} m²,
+                {{ selectedWeight | number : "1.0-0" }} kg /
+                {{ totalWeight | number : "1.0-0" }} kg
+              </strong>
+            </p>
+
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="confirmTrucks()"
+              [disabled]="!hasEnoughArea || !hasEnoughWeight"
+            >
+              Auswahl übernehmen
+            </button>
+          </footer>
+
+          <ng-template #noTrucksTpl>
+            <p>Keine LKWs vorhanden.</p>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- 2-Spalten Layout: links Kisten, rechts eingesetzte LKWs -->
+      <section class="layout-row">
+        <!-- Linke Spalte: Kisten -->
+        <section class="kisten-col">
+          <mat-card class="boxes-card">
+            <mat-card-title>Aktuelle Kisten</mat-card-title>
+            <mat-card-content>
+              <section *ngIf="boxes.length; else noBoxesTpl">
+                <!-- Pool für unzugeordnete Kisten -->
+                <section
+                  class="box-strip"
+                  (dragover)="onDragOver($event)"
+                  (drop)="onDropToPool($event)"
+                >
+                  <article
+                    class="box-card"
+                    *ngFor="let b of unassignedBoxes; trackBy: trackBox"
+                    draggable="true"
+                    (dragstart)="onBoxDragStart($event, b)"
+                    (click)="openBoxDialog(b)"
+                  >
+                    <h3 class="box-title">
+                      {{ b.articleName | shortText : 13 }}
+                    </h3>
+                    <p class="box-sub">{{ b.pieces }} Stk</p>
+                    <p class="box-meta">{{ b.area | number : "1.2-2" }} m²</p>
+                    <p class="box-meta">{{ b.weight | number : "1.2-2" }} kg</p>
+                  </article>
+                </section>
+
+                <!-- Summen -->
+                <footer class="totals">
+                  <span>
+                    Gesamtfläche:
+                    <strong>{{ poolArea | number : "1.2-2" }} m²</strong>
+                  </span>
+                  <span>
+                    Gesamtgewicht:
+                    <strong>{{ poolWeight | number : "1.2-2" }} kg</strong>
+                  </span>
+                </footer>
+              </section>
+
+              <ng-template #noBoxesTpl>
+                <p>Noch keine Kisten hinzugefügt.</p>
+              </ng-template>
+            </mat-card-content>
+          </mat-card>
+        </section>
+
+        <!-- Rechte Spalte: Eingesetzte LKWs -->
+        <aside class="confirmed-col" *ngIf="confirmedTrucks.length">
+          <!-- Eingesetzte LKWs -->
+          <mat-card
+            class="confirmed-trucks-card"
+            *ngIf="confirmedTrucks.length"
+          >
+            <mat-card-title>Eingesetzte LKWs</mat-card-title>
+
+            <mat-card-content class="confirmed-truck-container">
+              <section class="confirmed-truck-list">
+                <article
+                  class="confirmed-truck-card"
+                  *ngFor="let t of confirmedTrucks; trackBy: trackTruck"
+                >
+                  <!-- HEADER über dem Truck -->
+                  <header class="truck-top">
+                    <figure class="truck-image-wrapper">
+                      <ng-container *ngIf="t.image; else noImg">
+                        <img [src]="t.image" [alt]="t.name" />
+                      </ng-container>
+                      <ng-template #noImg>
+                        <figcaption class="truck-img-placeholder">
+                          LKW
+                        </figcaption>
+                      </ng-template>
+                    </figure>
+
+                    <section class="truck-info">
+                      <h3 class="truck-name">{{ t.name }}</h3>
+                      <p class="truck-meta">
+                        {{
+                          t.area ?? (t.length ?? 0) * (t.width ?? 0)
+                            | number : "1.2-2"
+                        }}
+                        m² •
+                        {{ t.maxWeight || 0 | number : "1.0-0" }} kg
+                      </p>
+                    </section>
+                  </header>
+
+                  <!-- "Zeichnung" des LKW + Drop-Zone -->
+                  <section class="truck-layout">
+                    <aside class="truck-front">
+                      <div class="truck-front-window"></div>
+                    </aside>
+
+                    <!-- GANZER BODY ist jetzt Drop-Zone -->
+                    <section
+                      class="truck-body"
+                      (dragover)="onDragOver($event)"
+                      (drop)="onDropToTruck($event, t)"
+                      [ngClass]="{ overloaded: isTruckOverloaded(t) }"
+                    >
+                      <article
+                        class="truck-box"
+                        *ngFor="let b of boxesForTruck(t); trackBy: trackBox"
+                        draggable="true"
+                        (dragstart)="onBoxDragStart($event, b)"
+                        (click)="openBoxDialog(b)"
+                      >
+                        <span class="truck-box-title">
+                          {{ b.articleName | shortText : 10 }}
+                        </span>
+                        <span class="truck-box-sub"> {{ b.pieces }} Stk </span>
+                      </article>
+
+                      <p
+                        class="truck-drop-hint"
+                        *ngIf="!boxesForTruck(t).length"
+                      >
+                        Kisten hierher ziehen
+                      </p>
+                    </section>
+                  </section>
+                  <footer
+                    class="truck-capacity"
+                    [ngClass]="{ overloaded: isTruckOverloaded(t) }"
+                  >
+                    <span>
+                      Fläche:
+                      {{ truckLoadedArea(t) | number : "1.2-2" }}
+                      /
+                      {{ truckCapacityArea(t) | number : "1.2-2" }} m²
+                    </span>
+
+                    <span>
+                      Gewicht:
+                      {{ truckLoadedWeight(t) | number : "1.0-0" }}
+                      /
+                      {{ truckCapacityWeight(t) | number : "1.0-0" }} kg
+                    </span>
+                  </footer>
+                </article>
+
+                <ng-template #noImg>
+                  <!-- fallback im Template oben benutzt -->
+                </ng-template>
+              </section>
+            </mat-card-content>
+          </mat-card>
+        </aside>
+      </section>
+    </section>
+  </main>
+  <section class="actions-row">
+  <button
+    mat-stroked-button
+    color="warn"
+    (click)="deleteTour()"
+  >
+    Tour löschen
+  </button>
+
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="saveTourState()"
+  >
+    Speichern
+  </button>
+</section>
+</ng-container>
+
+<ng-template #loadingTpl>
+  <section class="loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Tour wird geladen…</p>
+  </section>
+</ng-template>

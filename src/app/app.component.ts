@@ -4,7 +4,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
-import { UserComponent } from './user/user.component';
+import { CompanyComponent } from './company/company.component';
 import { DashboardComponent } from './dashboard/dashboard.component'
 import { MatButtonModule } from '@angular/material/button';
 

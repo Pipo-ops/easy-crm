@@ -1,0 +1,45 @@
+<mat-card
+  class="company-detail-header"
+  *ngIf="company; else loading"
+>
+  <div class="company-detail-header-container">
+    <button mat-icon-button class="pin-right-upper-corner" [matMenuTriggerFor]="companyMenu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #companyMenu="matMenu" class="mrg-16">
+      <button mat-menu-item (click)="editCompanyDetail()">Edit</button>
+      <button mat-menu-item class="delete-btn" (click)="deleteCompanyDetail()">Delete</button>
+    </mat-menu>  
+    <div>
+      <img
+        class="profil-img"
+        src="./../../assets/img/profil-img/user-icon.png"
+        alt=""
+      />
+    </div>
+    <div class="company-detail-header-text">
+      <span class="company-name">{{ company.company }}</span>
+      <h2>{{ company.firstName }} {{ company.lastName }}</h2>
+      <span>{{ company.email }}</span>
+    </div>
+  </div>
+</mat-card>
+
+<mat-card class="address-container mrgt-32" *ngIf="company">
+    <button mat-icon-button class="pin-right-upper-corner" [matMenuTriggerFor]="addressMenu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #addressMenu="matMenu" class="mrg-16">
+      <button mat-menu-item (click)="editAddressMenu()">Edit</button>
+    </mat-menu>  
+    <h2>Address</h2>
+    <mat-card-content>
+      <p>{{ company.street }}</p>
+      <p>{{ company.zipCode }} {{ company.city }}</p>
+    </mat-card-content>
+</mat-card>
+
+<ng-template #loading>
+  <p>Loading company...</p>
+</ng-template>
