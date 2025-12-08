@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../models/user.class';
+import { Company } from '../../../models/company.class';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { doc, setDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
@@ -24,39 +24,39 @@ import { Firestore } from '@angular/fire/firestore';
     FormsModule,
     MatDatepickerModule,
   ],
-  templateUrl: './dialog-edit-user.component.html',
-  styleUrl: './dialog-edit-user.component.scss',
+  templateUrl: './dialog-edit-company.component.html',
+  styleUrl: './dialog-edit-company.component.scss',
 })
-export class DialogEditUserComponent implements OnInit {
-  user!: User;
-  userId!: string;
+export class DialogEditCompanyComponent implements OnInit {
+  company!: Company;
+  companyId!: string;
   birthDate: Date = new Date();
   loading = false;
 
   firestore = inject(Firestore);
 
-  constructor(public dialogRef: MatDialogRef<DialogEditUserComponent>) {}
+  constructor(public dialogRef: MatDialogRef<DialogEditCompanyComponent>) {}
 
   ngOnInit() {
-    if (this.user.birthDate) {
-      this.birthDate = new Date(this.user.birthDate);
+    if (this.company.birthDate) {
+      this.birthDate = new Date(this.company.birthDate);
     }
   }
 
-  async saveUser() {
+  async saveCompany() {
     this.loading = true;
-    this.user.firstName = this.capitalize(this.user.firstName);
-    this.user.lastName = this.capitalize(this.user.lastName);
-    this.user.birthDate = this.birthDate.getTime();
+    this.company.firstName = this.capitalize(this.company.firstName);
+    this.company.lastName = this.capitalize(this.company.lastName);
+    this.company.birthDate = this.birthDate.getTime();
 
     try {
-      const userRef = doc(this.firestore, 'users', this.userId);
-      await setDoc(userRef, { ...this.user });
+      const companyRef = doc(this.firestore, 'companies', this.companyId);
+      await setDoc(companyRef, { ...this.company });
 
-      console.log('User updated');
+      console.log('Company updated');
       this.dialogRef.close();
     } catch (error) {
-      console.error('Error updating user: ', error);
+      console.error('Error updating company: ', error);
     } finally {
       this.loading = false;
     }

@@ -3,7 +3,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { User } from '../../../models/user.class';
+import { Company } from '../../../models/company.class';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
@@ -23,36 +23,36 @@ import { MatDialogRef } from '@angular/material/dialog';
     MatProgressBarModule,
     CommonModule,
   ],
-  templateUrl: './dialog-add-user.component.html',
-  styleUrl: './dialog-add-user.component.scss',
+  templateUrl: './dialog-add-company.component.html',
+  styleUrl: './dialog-add-company.component.scss',
 })
-export class DialogAddUserComponent {
+export class DialogAddCompanyComponent {
   firestore: Firestore = inject(Firestore);
 
-  user = new User();
+  company = new Company();
   birthDate: Date;
   loading = false;
 
-  constructor(public dialogRef: MatDialogRef<DialogAddUserComponent>) {
+  constructor(public dialogRef: MatDialogRef<DialogAddCompanyComponent>) {
     this.birthDate = new Date();
   }
 
   onNoClick(): void {}
 
-  async saveUser() {
-    this.user.birthDate = this.birthDate.getTime();
+  async saveCompany() {
+    this.company.birthDate = this.birthDate.getTime();
     this.loading = true;
 
-    this.user.firstName = this.capitalize(this.user.firstName);
-    this.user.lastName = this.capitalize(this.user.lastName);
-    this.user.street = this.capitalize(this.user.street);
-    this.user.city = this.capitalize(this.user.city);
+    this.company.firstName = this.capitalize(this.company.firstName);
+    this.company.lastName = this.capitalize(this.company.lastName);
+    this.company.street = this.capitalize(this.company.street);
+    this.company.city = this.capitalize(this.company.city);
 
     try {
-      const userCollection = collection(this.firestore, 'users');
-      await addDoc(userCollection, { ...this.user });
+      const companyCollection = collection(this.firestore, 'companies');
+      await addDoc(companyCollection, { ...this.company });
     } catch (error) {
-      console.error('Error adding user: ', error);
+      console.error('Error adding company: ', error);
     } finally {
       this.loading = false;
       this.dialogRef.close();

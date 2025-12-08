@@ -8,14 +8,15 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { UserComponent } from './user/user.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { UserDetailComponent } from './user-detail/user-detail.component';
+import { CompanyDetailComponent } from './company-detail/company-detail.component';
 import { CatagoryComponent } from './catagory/catagory.component';
 import { TruckRoutesComponent } from './truck-routes/truck-routes.component';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { ArticalComponent } from './artical/artical.component';
 import { LkwComponent } from './lkw/lkw.component';
+import { TourDetailComponent } from './tour-detail/tour-detail.component';
+import { CompanyComponent } from './company/company.component';
 
 export const appConfig: ApplicationConfig = {
   
@@ -27,12 +28,13 @@ export const appConfig: ApplicationConfig = {
     provideRouter([
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'user', component: UserComponent },
-      { path: 'user-detail/:id', component: UserDetailComponent },
+      { path: 'company', component: CompanyComponent },
+      { path: 'company-detail/:id', component: CompanyDetailComponent },
       { path: 'category', component: CatagoryComponent },
       { path: 'category/:id', component: ArticalComponent }, 
       { path: 'lkw', component: LkwComponent },
       { path: 'truck-routes', component: TruckRoutesComponent },
+      { path: 'tour/:id', component: TourDetailComponent },
     ]),
     
     provideClientHydration(),

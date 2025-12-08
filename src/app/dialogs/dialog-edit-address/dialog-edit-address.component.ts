@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../models/user.class';
+import { Company } from '../../../models/company.class';
 import { doc, setDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
@@ -28,8 +28,8 @@ import { Firestore } from '@angular/fire/firestore';
 })
 export class DialogEditAddressComponent {
 
-  user!: User;
-  userId!: string;
+  company!: Company;
+  companyId!: string;
   loading = false;
 
   firestore = inject(Firestore);
@@ -37,20 +37,20 @@ export class DialogEditAddressComponent {
 
   constructor(public dialogRef: MatDialogRef<DialogEditAddressComponent>) {}
 
-  async saveUser() {
+  async saveCompany() {
     this.loading = true;
 
-    this.user.street = this.capitalize(this.user.street);
-    this.user.city = this.capitalize(this.user.city);
+    this.company.street = this.capitalize(this.company.street);
+    this.company.city = this.capitalize(this.company.city);
 
     try {
-      const userRef = doc(this.firestore, 'users', this.userId);
-      await setDoc(userRef, { ...this.user });
+      const companyRef = doc(this.firestore, 'companies', this.companyId);
+      await setDoc(companyRef, { ...this.company });
 
-      console.log('User updated');
+      console.log('Company updated');
       this.dialogRef.close();
     } catch (error) {
-      console.error('Error updating user: ', error);
+      console.error('Error updating company: ', error);
     } finally {
       this.loading = false;
     }

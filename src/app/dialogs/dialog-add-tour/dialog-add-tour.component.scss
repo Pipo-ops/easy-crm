@@ -1,0 +1,21 @@
+.full {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.error {
+  color: #c62828;
+  margin-top: 6px;
+}
+
+.action-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -6,17 +6,17 @@
     <div>
       <mat-form-field appearance="outline" class="full-width mrgt-16">
         <mat-label>Street + House No.</mat-label>
-        <input [disabled]="loading" [(ngModel)]="user.street" matInput />
+        <input [disabled]="loading" [(ngModel)]="company.street" matInput />
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="mrg-16">
         <mat-label>Zip Code</mat-label>
-        <input [disabled]="loading" [(ngModel)]="user.zipCode" matInput />
+        <input [disabled]="loading" [(ngModel)]="company.zipCode" matInput />
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>City</mat-label>
-        <input [disabled]="loading" [(ngModel)]="user.city" matInput />
+        <input [disabled]="loading" [(ngModel)]="company.city" matInput />
       </mat-form-field>
     </div>
   </mat-dialog-content>
@@ -34,7 +34,7 @@
         class="save-btn"
         matButton
         [disabled]="loading"
-        (click)="saveUser()"
+        (click)="saveCompany()"
         cdkFocusInitial
       >
         Save

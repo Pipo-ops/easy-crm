@@ -1,1 +1,33 @@
-<p>truck-routes works!</p>
+<div class="tour-list" *ngIf="tours$ | async as tours">
+  <mat-card class="tour-card" *ngFor="let t of tours" (click)="openTour(t.id)">
+    <!-- Header mit Aktionen (wie Category) -->
+    <div class="card-header">
+      <div class="title">{{ t.name }}</div>
+      <div class="actions">
+        <button mat-icon-button aria-label="Löschen" (click)="deleteTour(t); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- “Hero”-Zeile/ Bildbereich lassen wir frei; Design wie Category: Bildslot -->
+    <div class="noimg">{{ t.company }}</div>
+
+    <!-- Footer mit Details -->
+    <div class="card-footer">
+      <div class="row">
+        <span><mat-icon inline>event</mat-icon> {{ t.date }}</span>
+        <span><mat-icon inline>person</mat-icon> {{ t.person }}</span>
+      </div>
+      <div class="row">
+        <span><mat-icon inline>schedule</mat-icon> {{ t.startTime }} – {{ t.endTime }}</span>
+        <span *ngIf="t.note"><mat-icon inline>notes</mat-icon> {{ t.note }}</span>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<button class="add-fab" mat-fab color="primary" matTooltip="Neue Tour starten" (click)="startNewTour()">
+  <mat-icon>add</mat-icon>
+</button>
+

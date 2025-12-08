@@ -1,4 +1,4 @@
-export class User{
+export class Company{
     id: string;
     company: string;
     firstName: string;
