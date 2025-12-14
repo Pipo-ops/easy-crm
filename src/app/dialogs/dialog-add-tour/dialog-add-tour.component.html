@@ -8,7 +8,16 @@
 
   <mat-form-field appearance="outline" class="full">
     <mat-label>Firma</mat-label>
-    <input matInput [(ngModel)]="company" [disabled]="loading" />
+    <mat-select
+      [(ngModel)]="selectedCompany"
+      [compareWith]="compareCompany"
+      [disabled]="loading"
+    >
+      <mat-option [value]="null">- Firma wählen -</mat-option>
+      <mat-option *ngFor="let c of (companies$ | async) ?? []" [value]="c">
+        {{ c.company }} - {{ c.firstName }} {{ c.lastName }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 
   <div class="grid">

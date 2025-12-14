@@ -10,6 +10,7 @@
         <section class="headline">
           <h1>{{ tour.name || "Tour" }}</h1>
           <p class="subtitle">
+            <span>Firma:</span> {{ tour.company }}<br />
             <span>Am:</span> {{ tour.date | date : "dd.MM.yyyy" }} <br />
             <span>Uhrzeit:</span> {{ tour.startTime }} - {{ tour.endTime }}
             <br />
@@ -27,7 +28,9 @@
     <section class="calc-section">
       <!-- Beladung kalkulieren -->
       <mat-card class="calc-card">
-        <mat-card-title>Beladung kalkulieren</mat-card-title>
+        <mat-card-title class="card-title-center"
+          >Beladung kalkulieren</mat-card-title
+        >
         <mat-card-content>
           <section class="form-row">
             <!-- Kategorie -->
@@ -70,18 +73,7 @@
                 (ngModelChange)="onAmountChange()"
               />
             </mat-form-field>
-
-            <!-- Hinzufügen -->
-            <button
-              mat-flat-button
-              color="primary"
-              (click)="addBoxes()"
-              [disabled]="!selectedArticle || amount <= 0"
-            >
-              Hinzufügen
-            </button>
           </section>
-
           <!-- Preview für aktuelle Eingabe -->
           <section class="preview" *ngIf="previewArea || previewWeight">
             <p>
@@ -93,12 +85,25 @@
               {{ previewWeight | number : "1.2-2" }} kg
             </p>
           </section>
+          <!-- Hinzufügen -->
+          <section class="btn-section">
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="addBoxes()"
+              [disabled]="!selectedArticle || amount <= 0"
+            >
+              Hinzufügen
+            </button>
+          </section>
         </mat-card-content>
       </mat-card>
 
       <!-- Verfügbare LKWs -->
       <mat-card class="trucks-card">
-        <mat-card-title>Verfügbare LKWs</mat-card-title>
+        <mat-card-title class="card-title-center"
+          >Verfügbare LKWs</mat-card-title
+        >
         <mat-card-content>
           <section
             class="truck-strip"
@@ -169,7 +174,9 @@
         <!-- Linke Spalte: Kisten -->
         <section class="kisten-col">
           <mat-card class="boxes-card">
-            <mat-card-title>Aktuelle Kisten</mat-card-title>
+            <mat-card-title class="card-title-center"
+              >Aktuelle Kisten</mat-card-title
+            >
             <mat-card-content>
               <section *ngIf="boxes.length; else noBoxesTpl">
                 <!-- Pool für unzugeordnete Kisten -->
@@ -221,7 +228,9 @@
             class="confirmed-trucks-card"
             *ngIf="confirmedTrucks.length"
           >
-            <mat-card-title>Eingesetzte LKWs</mat-card-title>
+            <mat-card-title class="card-title-center"
+              >Eingesetzte LKWs</mat-card-title
+            >
 
             <mat-card-content class="confirmed-truck-container">
               <section class="confirmed-truck-list">
@@ -306,6 +315,15 @@
                       /
                       {{ truckCapacityWeight(t) | number : "1.0-0" }} kg
                     </span>
+                    <mat-card-actions align="end" class="planner-btn-row">
+                      <button
+                        mat-stroked-button
+                        color="primary"
+                        (click)="openTruckPlanner(t); $event.stopPropagation()"
+                      >
+                        Ladeplanung (2D/3D)
+                      </button>
+                    </mat-card-actions>
                   </footer>
                 </article>
 
@@ -320,22 +338,14 @@
     </section>
   </main>
   <section class="actions-row">
-  <button
-    mat-stroked-button
-    color="warn"
-    (click)="deleteTour()"
-  >
-    Tour löschen
-  </button>
+    <button mat-stroked-button color="primary" (click)="autoAssignToTrucks()">
+      Auto einräumen
+    </button>
 
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="saveTourState()"
-  >
-    Speichern
-  </button>
-</section>
+    <button mat-raised-button color="primary" (click)="saveTourState()">
+      Speichern
+    </button>
+  </section>
 </ng-container>
 
 <ng-template #loadingTpl>

@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ShortTextPipe } from '../pipes/short-text.pipe';
 
 import {
   Firestore,
@@ -40,6 +41,7 @@ type Tour = {
     MatButtonModule,
     MatTooltipModule,
     MatDialogModule,
+    ShortTextPipe,
   ],
   templateUrl: './truck-routes.component.html',
   styleUrl: './truck-routes.component.scss',

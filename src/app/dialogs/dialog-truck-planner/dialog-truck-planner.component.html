@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>LKW Ladeflächen Planer (2D & 3D)</h2>
+
+<mat-dialog-content class="planner-content">
+  <div class="status">
+    Ladefläche:
+    {{ truckLength | number:'1.2-2' }} m (Länge) x
+    {{ truckWidth  | number:'1.2-2' }} m (Breite) |
+    Kisten im LKW: {{ crates.length }} |
+    Nicht platziert: {{ overflowCrates.length }}
+  </div>
+
+  <div class="toolbar">
+    <button mat-stroked-button (click)="autoLayout()">Auto-Layout neu</button>
+    <button mat-stroked-button [disabled]="!selectedId" (click)="rotateSelected()">Ausgewählte drehen</button>
+    <div class="hint">
+      Tipp: Kisten im 2D mit Maus ziehen. Kollisionen werden blockiert.
+    </div>
+  </div>
+
+  <section class="canvas-block">
+    <h3>2D Draufsicht (Kisten ziehen mit Maus)</h3>
+    <canvas #canvas2d class="canvas-2d"></canvas>
+  </section>
+
+  <section class="canvas-block">
+    <h3>3D Visualisierung (Drehen/Zoomen mit Maus)</h3>
+    <canvas #canvas3d class="canvas-3d"></canvas>
+  </section>
+
+  <section class="overflow" *ngIf="overflowCrates.length">
+    <h3>Nicht platzierte Kisten</h3>
+
+    <div class="overflow-list">
+      <div class="overflow-item" *ngFor="let c of overflowCrates; trackBy: trackCrate">
+        <div class="meta">
+          <div class="name">{{ c.name }}</div>
+          <div class="dims">{{ c.w_m | number:'1.2-2' }}m x {{ c.h_m | number:'1.2-2' }}m</div>
+        </div>
+        <button mat-flat-button color="primary" (click)="placeOverflowCrate(c.id)">
+          In LKW legen
+        </button>
+      </div>
+    </div>
+
+    <div class="overflow-note">
+      Wenn „In LKW legen“ nicht klappt, ist wirklich keine passende freie Fläche für diese Maße übrig
+      (oder du musst erst Kisten verschieben).
+    </div>
+  </section>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions" align="end">
+  <button mat-button (click)="close()">Schließen</button>
+  <button mat-flat-button color="primary" (click)="apply()">Übernehmen</button>
+</mat-dialog-actions>

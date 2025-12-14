@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-dialog-add-user',
+  selector: 'app-dialog-add-company',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -33,26 +33,26 @@ export class DialogAddCompanyComponent {
   birthDate: Date;
   loading = false;
 
-  constructor(public dialogRef: MatDialogRef<DialogAddCompanyComponent>) {
+  constructor(public dialogRef: MatDialogRef<DialogAddUserComponent>) {
     this.birthDate = new Date();
   }
 
   onNoClick(): void {}
 
-  async saveCompany() {
-    this.company.birthDate = this.birthDate.getTime();
+  async saveUser() {
+    this.user.birthDate = this.birthDate.getTime();
     this.loading = true;
 
-    this.company.firstName = this.capitalize(this.company.firstName);
-    this.company.lastName = this.capitalize(this.company.lastName);
-    this.company.street = this.capitalize(this.company.street);
-    this.company.city = this.capitalize(this.company.city);
+    this.user.firstName = this.capitalize(this.user.firstName);
+    this.user.lastName = this.capitalize(this.user.lastName);
+    this.user.street = this.capitalize(this.user.street);
+    this.user.city = this.capitalize(this.user.city);
 
     try {
-      const companyCollection = collection(this.firestore, 'companies');
-      await addDoc(companyCollection, { ...this.company });
+      const userCollection = collection(this.firestore, 'users');
+      await addDoc(userCollection, { ...this.user });
     } catch (error) {
-      console.error('Error adding company: ', error);
+      console.error('Error adding user: ', error);
     } finally {
       this.loading = false;
       this.dialogRef.close();
