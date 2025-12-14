@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogEditBoxComponent } from '../dialogs/dialog-edit-box/dialog-edit-box.component';
+import { DialogTruckPlannerComponent } from '../dialogs/dialog-truck-planner/dialog-truck-planner.component';
 
 import {
   Firestore,
@@ -24,55 +25,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-
-type Tour = {
-  id: string;
-  name: string;
-  person: string;
-  date: string; // YYYY-MM-DD
-  startTime: string; // HH:mm
-  endTime: string; // HH:mm
-  note?: string | null;
-  createdAt?: number;
-  boxes?: Box[];
-  confirmedTruckIds?: string[];
-};
-
-type Truck = {
-  id: string;
-  name: string;
-  image?: string;
-  length?: number;
-  width?: number;
-  area?: number; // m²
-  maxWeight?: number; // kg
-};
-
-type Category = {
-  id: string;
-  name: string;
-  image?: string;
-};
-
-type Article = {
-  id: string;
-  name: string;
-  image?: string;
-  gewicht?: number; // Gewicht pro Stück (kg)
-  stueck?: number; // Stück pro Kiste
-  laenge?: number; // cm
-  breite?: number; // cm
-  kistenGewicht?: number; // kg
-};
-
-type Box = {
-  id: string;
-  articleName: string;
-  pieces: number;
-  area: number; // m²
-  weight: number; // kg
-  truckId?: string | null;
-};
+import { Article, Box, Category, Tour, Truck } from '../models/tour.models';
 
 @Component({
   selector: 'app-tour-detail',
@@ -98,7 +51,7 @@ export class TourDetailComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private dialog = inject(MatDialog);
-  
+
   // ---- Tour-Daten ----
   tour$!: Observable<Tour | null>;
   tourId: string | null = null;
@@ -169,10 +122,13 @@ export class TourDetailComponent {
 
       this.initialConfirmedTruckIds = tour.confirmedTruckIds ?? [];
 
-      if (this.allTrucks.length) {
-        this.confirmedTrucks = this.allTrucks.filter((t) =>
+      // Falls Trucks schon geladen sind, direkt mappen
+      if (this.allTrucks.length && this.initialConfirmedTruckIds.length) {
+        const confirmed = this.allTrucks.filter((t) =>
           this.initialConfirmedTruckIds.includes(t.id)
         );
+        this.confirmedTrucks = confirmed;
+        this.selectedTrucks = [...confirmed];
       }
     });
   }
@@ -196,9 +152,11 @@ export class TourDetailComponent {
       this.allTrucks = trucks;
 
       if (this.initialConfirmedTruckIds.length) {
-        this.confirmedTrucks = this.allTrucks.filter((t) =>
+        const confirmed = this.allTrucks.filter((t) =>
           this.initialConfirmedTruckIds.includes(t.id)
         );
+        this.confirmedTrucks = confirmed;
+        this.selectedTrucks = [...confirmed];
       }
 
       this.updateNeededTrucks();
@@ -207,12 +165,30 @@ export class TourDetailComponent {
   }
 
   toggleTruck(t: Truck) {
-    const exists = this.selectedTrucks.find((x) => x.id === t.id);
-    if (exists) {
+    const isSelected = this.selectedTrucks.some((x) => x.id === t.id);
+
+    if (isSelected) {
+      // 1. alle Kisten aus diesem LKW zurück in den Pool
+      this.boxes.forEach((box) => {
+        if (box.truckId === t.id) {
+          box.truckId = null;
+        }
+      });
+
+      // 2. LKW aus der Auswahl entfernen
       this.selectedTrucks = this.selectedTrucks.filter((x) => x.id !== t.id);
+
+      // 3. LKW auch aus den eingesetzten LKWs entfernen
+      this.confirmedTrucks = this.confirmedTrucks.filter((x) => x.id !== t.id);
+
+      // 4. Totals neu berechnen, weil Kisten sich geändert haben
+      this.recalcTotals();
     } else {
+      // LKW wird neu ausgewählt (nur oben gelb markieren)
       this.selectedTrucks = [...this.selectedTrucks, t];
     }
+
+    // Kapazität für aktuelle Auswahl aktualisieren
     this.updateSelectedCapacity();
   }
 
@@ -304,12 +280,17 @@ export class TourDetailComponent {
   addBoxes() {
     const art = this.selectedArticle;
     const qty = this.amount || 0;
-
     if (!art || qty <= 0) return;
+
+    const lengthCm = art.laenge ?? 0;
+    const widthCm = art.breite ?? 0;
+
+    const lengthM = lengthCm / 100;
+    const widthM = widthCm / 100;
 
     const stueckProKiste = art.stueck ?? 1;
     const kistenAnzahl = Math.ceil(qty / stueckProKiste);
-    const flaecheProKiste = ((art.laenge ?? 0) * (art.breite ?? 0)) / 10000; // cm² -> m²
+    const flaecheProKiste = (lengthCm * widthCm) / 10000; // cm² -> m²
 
     for (let i = 0; i < kistenAnzahl; i++) {
       const stueckInDieserKiste =
@@ -329,11 +310,19 @@ export class TourDetailComponent {
         area: +flaecheProKiste.toFixed(2),
         weight: +kistenGewicht.toFixed(2),
         truckId: null,
+
+        // ✅ echte Maße
+        lengthM: lengthM > 0 ? +lengthM.toFixed(2) : undefined,
+        widthM: widthM > 0 ? +widthM.toFixed(2) : undefined,
+        heightM: 1,
+
+        // ✅ Original (optional)
+        lengthCm: lengthCm || undefined,
+        widthCm: widthCm || undefined,
       });
     }
 
     this.recalcTotals();
-    // Eingabe zurücksetzen
     this.amount = 1;
     this.recalculatePreview();
   }
@@ -521,21 +510,186 @@ export class TourDetailComponent {
     }
   }
 
-  async deleteTour() {
-    if (!this.tourId) return;
-
-    const ok = confirm('Tour wirklich löschen?');
-    if (!ok) return;
-
-    const tourRef = doc(this.fs, 'tours', this.tourId);
-
-    try {
-      await deleteDoc(tourRef);
-      // zurück zur Übersicht
-      this.router.navigate(['/truck-routes']);
-    } catch (err) {
-      console.error('Fehler beim Löschen', err);
+  autoAssignToTrucks() {
+    if (!this.confirmedTrucks.length) {
+      alert('Bitte zuerst LKW Auswahl übernehmen.');
+      return;
     }
+
+    // nur unzugeordnete Kisten einräumen
+    const pool = this.unassignedBoxes.map((b) => ({ ...b }));
+
+    if (!pool.length) {
+      alert('Keine unzugeordneten Kisten vorhanden.');
+      return;
+    }
+
+    // wir räumen nach Truck-Reihenfolge ein
+    for (const truck of this.confirmedTrucks) {
+      const placedIds = this.tryPackBoxesIntoTruck(pool, truck);
+
+      // truckId setzen + optional Layout speichern
+      this.boxes = this.boxes.map((b) => {
+        const placed = placedIds.get(b.id);
+        if (!placed) return b;
+
+        return {
+          ...b,
+          truckId: truck.id,
+          x_m: placed.x_m,
+          y_m: placed.y_m,
+          w_m: placed.w_m,
+          h_m: placed.h_m,
+        };
+      });
+
+      // aus pool entfernen
+      for (const id of placedIds.keys()) {
+        const idx = pool.findIndex((x) => x.id === id);
+        if (idx !== -1) pool.splice(idx, 1);
+      }
+
+      if (!pool.length) break; // alles eingeräumt
+    }
+
+    // wenn noch was übrig ist -> Info
+    if (pool.length) {
+      alert(
+        `Nicht alles passt in die ausgewählten LKWs. Übrig: ${pool.length} Kisten.`
+      );
+    }
+
+    this.recalcTotals();
   }
 
+  /** Packt so viele Boxen wie möglich in EINEN Truck (2D), gibt Layout pro Box zurück */
+  private tryPackBoxesIntoTruck(
+    pool: Box[],
+    truck: Truck
+  ): Map<string, { x_m: number; y_m: number; w_m: number; h_m: number }> {
+    const result = new Map<
+      string,
+      { x_m: number; y_m: number; w_m: number; h_m: number }
+    >();
+
+    const truckWidth = truck.width ?? 2.5;
+    const truckLength =
+      truck.length ??
+      (truck.area && truckWidth > 0 ? truck.area / truckWidth : 8);
+
+    // Kandidaten: größte zuerst (nach Fläche)
+    const candidates = [...pool].sort((a, b) => {
+      const aw = a.lengthM ?? Math.sqrt(a.area || 1);
+      const ah = a.widthM ?? Math.sqrt(a.area || 1);
+      const bw = b.lengthM ?? Math.sqrt(b.area || 1);
+      const bh = b.widthM ?? Math.sqrt(b.area || 1);
+      return bw * bh - aw * ah;
+    });
+
+    const placed: { id: string; x: number; y: number; w: number; h: number }[] =
+      [];
+
+    const step = 0.05; // 5cm Raster
+
+    const fitsNoOverlap = (
+      x: number,
+      y: number,
+      w: number,
+      h: number,
+      id: string
+    ) => {
+      if (x < 0 || y < 0) return false;
+      if (x + w > truckLength + 1e-6) return false;
+      if (y + h > truckWidth + 1e-6) return false;
+
+      for (const p of placed) {
+        const overlap =
+          x < p.x + p.w && x + w > p.x && y < p.y + p.h && y + h > p.y;
+
+        if (overlap) return false;
+      }
+      return true;
+    };
+
+    const placeOne = (box: Box): boolean => {
+      const hasDims = !!(
+        box.lengthM &&
+        box.widthM &&
+        box.lengthM > 0 &&
+        box.widthM > 0
+      );
+      const w0 = hasDims ? box.lengthM! : Math.sqrt(box.area || 1);
+      const h0 = hasDims ? box.widthM! : Math.sqrt(box.area || 1);
+
+      const options = [
+        { w: w0, h: h0 },
+        { w: h0, h: w0 }, // drehen erlauben
+      ];
+
+      for (const opt of options) {
+        for (let y = 0; y <= truckWidth - opt.h + 1e-6; y += step) {
+          for (let x = 0; x <= truckLength - opt.w + 1e-6; x += step) {
+            if (fitsNoOverlap(x, y, opt.w, opt.h, box.id)) {
+              placed.push({ id: box.id, x, y, w: opt.w, h: opt.h });
+              result.set(box.id, {
+                x_m: +x.toFixed(3),
+                y_m: +y.toFixed(3),
+                w_m: +opt.w.toFixed(3),
+                h_m: +opt.h.toFixed(3),
+              });
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    };
+
+    for (const b of candidates) {
+      // Gewicht grob prüfen (optional)
+      // Wenn du willst, kann ich pro Truck auch maxWeight beachten.
+      placeOne(b);
+    }
+
+    return result;
+  }
+
+  openTruckPlanner(truck: Truck) {
+    const boxesForTruck = this.boxesForTruck(truck);
+
+    const ref = this.dialog.open(DialogTruckPlannerComponent, {
+      width: '1000px',
+      maxWidth: '95vw',
+      height: '90vh',
+      data: {
+        truck,
+        boxes: boxesForTruck,
+      },
+    });
+
+    ref.afterClosed().subscribe(async (res) => {
+      if (!res?.ok || !Array.isArray(res.layout)) return;
+
+      // layout: [{id,x_m,y_m,w_m,h_m}]
+      const map = new Map<string, any>(res.layout.map((x: any) => [x.id, x]));
+
+      // ✅ Boxes updaten (nur die vom Truck)
+      this.boxes = this.boxes.map((b) => {
+        if (b.truckId !== truck.id) return b;
+
+        const l = map.get(b.id);
+        if (!l) return b;
+
+        return {
+          ...b,
+          x_m: l.x_m,
+          y_m: l.y_m,
+          w_m: l.w_m,
+          h_m: l.h_m,
+        };
+      });
+
+      this.recalcTotals();
+    });
+  }
 }

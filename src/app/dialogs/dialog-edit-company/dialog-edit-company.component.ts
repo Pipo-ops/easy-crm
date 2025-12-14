@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { Company } from '../../../models/company.class';
+import { Company } from '../../models/company.class';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { doc, setDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';

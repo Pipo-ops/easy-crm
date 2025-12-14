@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogAddCompanyComponent } from '../dialogs/dialog-add-company/dialog-add-company.component';
-import { Company } from '../../models/company.class'; 
+import { Company } from '../models/company.class'; 
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';

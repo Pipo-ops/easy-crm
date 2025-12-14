@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Firestore, getDoc } from '@angular/fire/firestore';
 import { deleteDoc, doc } from '@angular/fire/firestore';
-import { Company } from '../../models/company.class';
+import { Company } from '../models/company.class';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';

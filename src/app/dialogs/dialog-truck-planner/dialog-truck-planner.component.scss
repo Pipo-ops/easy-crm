@@ -1,0 +1,148 @@
+:host {
+  display: block;
+}
+
+/* Der Dialog-Container (Material) */
+::ng-deep .mat-mdc-dialog-container {
+  padding: 0; /* optional: weniger Rand */
+}
+
+/* Wichtig: Dialog soll volle Höhe verwenden */
+::ng-deep .mat-mdc-dialog-surface {
+  display: flex;
+  flex-direction: column;
+  height: 90vh; /* du nutzt ja height:'90vh' im open() */
+  max-height: 90vh;
+}
+
+/* Titel bleibt oben */
+::ng-deep .mat-mdc-dialog-title {
+  flex: 0 0 auto;
+  padding: 16px 24px 0 24px;
+}
+
+::ng-deep .mat-mdc-dialog-content {
+  max-height: none !important;
+}
+
+.planner-content {
+  flex: 1 1 auto;
+  overflow: auto;
+
+  min-width: 900px;
+  max-width: 1200px;
+
+  padding: 12px 24px 12px 24px; /* schöner als default */
+}
+
+.status {
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 8px 0 12px;
+
+  .hint {
+    margin-left: auto;
+    font-size: 12px;
+    color: #6b7280;
+  }
+}
+
+.canvas-block {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+}
+
+.canvas-2d {
+  display: block;
+  border-radius: 8px;
+  background: #e5e7eb;
+  max-width: 100%;
+  height: auto;
+}
+
+.canvas-3d {
+  width: 100%;
+  height: 320px;
+  display: block;
+  border-radius: 8px;
+  background: #e5e7eb;
+}
+
+.overflow {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+  h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .overflow-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .overflow-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px;
+
+    .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .name {
+        font-weight: 600;
+        color: #111827;
+      }
+      .dims {
+        font-size: 12px;
+        color: #6b7280;
+      }
+    }
+  }
+
+  .overflow-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #6b7280;
+  }
+}
+
+.dialog-actions {
+  flex: 0 0 auto;
+  padding: 12px 24px 16px 24px;
+
+  position: sticky;
+  bottom: 0;
+  background: white; /* damit es über Content liegt */
+  border-top: 1px solid #e5e7eb;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+}
