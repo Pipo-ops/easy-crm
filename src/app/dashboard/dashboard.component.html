@@ -1,1 +1,156 @@
-<p>dashboard works!</p>
+<div class="dash">
+  <!-- KPI Row -->
+  <section class="kpi-row" *ngIf="isBrowser">
+    <!-- KPI1: Mini-Statistik -->
+    <div class="kpi-card" *ngIf="stats$ | async as s">
+      <div class="kpi-title">Mini-Statistik (7 Tage)</div>
+      <div class="mini-bars">
+        <div class="bar" *ngFor="let p of s.mini7days">
+          <div
+            class="bar-col"
+            [style.height.%]="Math.min(100, p.value * 20)"
+          ></div>
+          <div class="bar-label">{{ p.label }}</div>
+        </div>
+      </div>
+      <div class="kpi-sub">Touren pro Tag (letzte 7 Tage)</div>
+    </div>
+
+    <!-- KPI2: Nächste Tour -->
+    <div class="kpi-card" *ngIf="stats$ | async as s">
+      <div class="kpi-title">Nächste Tour</div>
+      <ng-container *ngIf="s.nextTour; else noneNext">
+        <div class="big">{{ s.nextTour!.title }}</div>
+        <div class="muted">
+          {{ s.nextTour!.company }} • {{ s.nextTour!.person }}
+        </div>
+        <div class="muted">
+          {{ s.nextTour!.when | date : "dd.MM.yyyy HH:mm" }}
+        </div>
+      </ng-container>
+      <ng-template #noneNext>
+        <div class="muted">Keine kommende Tour gefunden.</div>
+      </ng-template>
+    </div>
+
+    <!-- KPI3: Diese Woche -->
+    <div class="kpi-card" *ngIf="stats$ | async as s">
+      <div class="kpi-title">Diese Woche</div>
+      <div class="big">{{ s.weekCount }}</div>
+      <div class="kpi-sub">Touren (Mo–So)</div>
+    </div>
+  </section>
+
+  <!-- Main -->
+  <section class="main-row">
+    <!-- Calendar -->
+    <div
+      class="calendar-card"
+      [class.is-fullscreen]="isCalendarFullscreen"
+      (dblclick)="toggleCalendarFullscreen()"
+    >
+      <div class="card-head">
+        <h3>Touren Kalender</h3>
+
+        <button
+          class="icon-btn"
+          type="button"
+          (click)="toggleCalendarFullscreen(); $event.stopPropagation()"
+        >
+          {{ isCalendarFullscreen ? "Schließen" : "Vergrößern" }}
+        </button>
+      </div>
+
+      <full-calendar
+        *ngIf="isBrowser"
+        #fc
+        [options]="calendarOptions"
+      ></full-calendar>
+    </div>
+
+    <!-- Right side -->
+    <ng-container *ngIf="stats$ | async as s">
+      <div class="side-stack" *ngIf="!isCalendarFullscreen">
+        <!-- Panel 1: Heutige Touren (klick -> Monat) -->
+        <div class="side-card clickable" (click)="toggleToursScope()">
+          <div class="card-head">
+            <h3>
+              {{
+                scopeTours === "today" ? "Heutige Touren" : "Touren im Monat"
+              }}
+            </h3>
+            <span class="pill">{{
+              scopeTours === "today" ? "Heute" : "Monat"
+            }}</span>
+          </div>
+
+          <div class="list" *ngIf="scopeTours === 'today'; else monthList">
+            <div
+              class="list-item"
+              *ngFor="let t of s.todayTours | slice : 0 : 6"
+            >
+              <div class="li-title">{{ t.name }}</div>
+              <div class="li-sub">
+                {{ t.startTime }}–{{ t.endTime }} • {{ t.company }} •
+                {{ t.person }}
+              </div>
+            </div>
+            <div class="muted" *ngIf="!s.todayTours.length">
+              Keine Touren heute.
+            </div>
+          </div>
+
+          <ng-template #monthList>
+            <div class="muted">
+              Touren im Monat: <b>{{ s.monthTours.length }}</b>
+            </div>
+            <div class="muted">Klicken zum Umschalten (Heute/Monat)</div>
+          </ng-template>
+        </div>
+
+        <!-- Panel 2: LKW Auslastung (klick -> Monat) -->
+        <div class="side-card clickable" (click)="toggleTrucksScope()">
+          <div class="card-head">
+            <h3>LKW-Auslastung</h3>
+            <span class="pill">
+              {{ scopeTrucks === "today" ? "Nächste 7 Tage" : "Monat" }}
+            </span>
+          </div>
+
+          <!-- Nächste 7 Tage -->
+          <ng-container *ngIf="scopeTrucks === 'today'; else monthView">
+            <div class="list-item" *ngFor="let d of s.trucksNext7Days">
+              <div class="li-title">
+                {{ d.date | date:'EEEE dd.MM.yyyy':'':'de' }}
+              </div>
+              <div class="li-sub">{{ d.used }} / {{ d.total }} LKW</div>
+            </div>
+
+            <div class="muted" *ngIf="!s.trucksNext7Days.length">
+              Keine Daten für die nächsten 7 Tage.
+            </div>
+          </ng-container>
+
+          <!-- Monat -->
+          <ng-template #monthView>
+            <div class="list-item" *ngFor="let d of s.trucksMonthDays">
+              <div class="li-title">
+                {{ d.date | date:'EEEE dd.MM.yyyy':'':'de' }}
+              </div>
+              <div class="li-sub">{{ d.used }} / {{ d.total }} LKW</div>
+            </div>
+
+            <div class="muted">Klicken zum Umschalten (Monat ↔ 7 Tage)</div>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
+  </section>
+
+  <!-- Backdrop -->
+  <div
+    class="backdrop"
+    *ngIf="isCalendarFullscreen"
+    (click)="toggleCalendarFullscreen()"
+  ></div>
+</div>

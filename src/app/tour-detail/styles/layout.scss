@@ -1,0 +1,55 @@
+.tour-detail {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loading {
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 400px;
+  margin: 40px auto;
+}
+
+/* 2-Spalten-Layout */
+.layout-row {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.kisten-col {
+  flex: 0 0 40%;
+  min-width: 260px;
+
+  .boxes-card {
+    height: 100%;
+    text-align: center;
+  }
+}
+
+.confirmed-col {
+  flex: 1 1 60%;
+  min-width: 320px;
+
+  .confirmed-trucks-card {
+    height: 100%;
+    text-align: center;
+  }
+}
+
+.actions-row {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.planner-btn-row {
+  padding: 8px 16px 16px;
+}

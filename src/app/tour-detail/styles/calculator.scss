@@ -1,0 +1,36 @@
+.calc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  mat-card {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+.calc-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-section {
+  display: flex;
+  justify-content: center;
+}
+
+/* Formular-Row */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  margin-top: 18px;
+}
