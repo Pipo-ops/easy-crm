@@ -21,15 +21,21 @@
     display: flex;
     align-items: center;
     border-bottom: 1px solid rgba(0,0,0,0.08);
-    height: 56px;
-    padding-left: 16px;
-    padding-right: 16px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img{
+        height:150px;
+    }
 }    
 
 .menu-items{
     list-style-type: none;
     padding: 0;
     margin: 0;
+    margin-top: 30px;
 
     mat-icon{
         margin-right: 16px;
@@ -42,6 +48,9 @@
         display: flex;
         align-items: center;
         cursor: pointer;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: "Nunito", sans-serif;
 
         &:hover{
             background-color: rgba(0,0,0,0.05);
