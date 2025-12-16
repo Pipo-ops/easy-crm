@@ -1,0 +1,162 @@
+.confirmed-trucks-card {
+  margin-top: 0;
+}
+
+.confirmed-truck-container {
+  padding: 0;
+}
+
+.confirmed-truck-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 5px;
+  align-items: stretch;
+}
+
+.confirmed-truck-card {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  color: #000;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  padding: 8px 8px 10px;
+}
+
+.truck-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.truck-image-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #555;
+  margin: 0;
+}
+
+.truck-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.truck-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.truck-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.truck-name {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+}
+
+.truck-meta {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+/* Layout (Fahrerhaus + Laderaum) */
+.truck-layout {
+  display: flex;
+  margin-top: 2px;
+  background: #222;
+  border-radius: 16px;
+  gap: 4px;
+  padding: 4px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.truck-front {
+  flex: 0 0 70px;
+  background: #444;
+  border-radius: 30px 0 0 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.truck-front-window {
+  width: 40px;
+  height: 110px;
+  margin-left: 5px;
+  background-color: #ddd;
+  border-radius: 20px 0 0 20px;
+}
+
+.truck-body {
+  flex: 1 1 auto;
+  min-height: 100px;
+  background: #367a27;
+  border-radius: 0 12px 12px 0;
+  padding: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  align-content: flex-start;
+  box-sizing: border-box;
+}
+
+.truck-body.overloaded {
+  background: #8b1f1f;
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.truck-box {
+  background: #444444;
+  border-radius: 6px;
+  padding: 1px 4px;
+  font-size: 16px;
+  display: inline-flex;
+  flex-direction: column;
+  cursor: grab;
+}
+
+.truck-box-title {
+  font-weight: 600;
+}
+
+.truck-box-sub {
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.truck-drop-hint {
+  font-size: 18px;
+  opacity: 0.7;
+  align-self: center;
+}
+
+.truck-capacity {
+  margin-top: 6px;
+  font-size: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  color: #2e7d32;
+}
+
+.truck-capacity.overloaded {
+  color: #c62828;
+}

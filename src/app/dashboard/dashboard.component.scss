@@ -1,0 +1,228 @@
+.dash {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.kpi-card {
+  background: white;
+  border-radius: 12px;
+  min-height: 110px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kpi-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.big {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.kpi-sub {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.muted {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Mini Bars */
+.mini-bars {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  align-items: end;
+  height: 58px;
+}
+
+.bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.bar-col {
+  width: 100%;
+  border-radius: 8px;
+  background: #111827;
+  min-height: 6px;
+}
+
+.bar-label {
+  font-size: 10px;
+  color: #6b7280;
+}
+
+/* Kalender + Side Panel */
+.main-row {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 12px;
+  align-items: start;
+}
+
+.calendar-card,
+.side-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  padding: 12px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+
+  h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+.icon-btn {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+/* Fullscreen */
+.calendar-card.is-fullscreen {
+  position: fixed;
+  inset: 14px;
+  z-index: 1001;
+  padding: 12px;
+  overflow: auto;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+
+/* ✅ Problem #2: Events dürfen NICHT umbrechen / in andere Tage “laufen” */
+:host ::ng-deep .fc .fc-event-title,
+:host ::ng-deep .fc .fc-event-time {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Option: Event-Höhe begrenzen */
+:host ::ng-deep .fc-daygrid-event {
+  max-width: 100%;
+}
+
+:host ::ng-deep .fc-daygrid-event,
+:host ::ng-deep .fc-daygrid-dot-event {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  max-width: 100%;
+}
+
+/* Text selbst */
+:host ::ng-deep .fc-evt-text {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: block;
+  max-width: 100%;
+}
+
+/* ⛔ verhindert zweite Zeile */
+:host ::ng-deep .fc-daygrid-event .fc-event-title {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* 🔧 Fix: verhindert „höher werden“ der Tageszelle */
+:host ::ng-deep .fc-daygrid-day-frame {
+  overflow: hidden;
+}
+
+:host ::ng-deep .fc-event {
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+:host ::ng-deep .fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.side-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.pill {
+  font-size: 11px;
+  border: 1px solid #e5e7eb;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #111827;
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+.list-item {
+  padding: 6px 0;
+  border-top: 1px solid #f3f4f6;
+}
+
+.list-item:first-child {
+  border-top: none;
+}
+
+.li-title {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.li-sub {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .kpi-row {
+    grid-template-columns: 1fr;
+  }
+  .main-row {
+    grid-template-columns: 1fr;
+  }
+}

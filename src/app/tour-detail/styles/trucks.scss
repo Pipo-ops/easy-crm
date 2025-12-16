@@ -1,0 +1,97 @@
+.trucks-card {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: 0 0 auto;
+}
+
+.card-title-center {
+  text-align: center;
+  width: 100%;
+  display: block;
+  font-weight: 600;
+}
+
+/* Streifen verfügbare LKWs */
+.truck-strip {
+  background: #b5b5b5;
+  margin-top: 10px;
+  border-radius: 20px;
+  padding: 16px;
+
+  display: flex;
+  gap: 16px;
+
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  white-space: nowrap;
+}
+
+.truck-card {
+  flex: 0 0 auto;
+  width: 150px;
+  height: 120px;
+  background: #222;
+  border-radius: 18px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border 0.15s ease;
+  border: 2px solid transparent;
+}
+
+.truck-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.truck-card.selected {
+  border-color: #ffeb3b;
+}
+
+.truck-card img,
+.truck-placeholder {
+  width: 100%;
+  height: 90px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.truck-name {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.truck-footer {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.truck-footer strong.ok {
+  color: #2e7d32;
+}
+
+.truck-footer strong.bad {
+  color: #c62828;
+}
