@@ -50,14 +50,65 @@ export class TruckRoutesComponent {
   private fs = inject(Firestore);
   private dialog = inject(MatDialog);
 
+  private readonly LETTER_COLORS: Record<string, string> = {
+    A: '#F44336',
+    B: '#E91E63',
+    C: '#9C27B0',
+    D: '#673AB7',
+    E: '#3F51B5',
+    F: '#2196F3',
+    G: '#03A9F4',
+    H: '#00BCD4',
+    I: '#009688',
+    J: '#4CAF50',
+    K: '#8BC34A',
+    L: '#CDDC39',
+    M: '#FFEB3B',
+    N: '#FFC107',
+    O: '#FF9800',
+    P: '#FF5722',
+    Q: '#795548',
+    R: '#9E9E9E',
+    S: '#607D8B',
+    T: '#1ABC9C',
+    U: '#2ECC71',
+    V: '#3498DB',
+    W: '#9B59B6',
+    X: '#34495E',
+    Y: '#F1C40F',
+    Z: '#E67E22',
+  };
+
+  companyColor(company?: string): string {
+    const letter = (company ?? '').trim().charAt(0).toUpperCase();
+    return this.LETTER_COLORS[letter] ?? '#9CA3AF'; 
+  }
+
+  companyTextColor(bgHex: string): '#111827' | '#ffffff' {
+    const c = (bgHex || '').replace('#', '');
+    if (c.length !== 6) return '#111827';
+
+    const r = parseInt(c.slice(0, 2), 16);
+    const g = parseInt(c.slice(2, 4), 16);
+    const b = parseInt(c.slice(4, 6), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    return luminance > 0.65 ? '#111827' : '#ffffff';
+  }
+
+  companyInitial(company?: string): string {
+    return (company ?? '?').trim().charAt(0).toUpperCase() || '?';
+  }
+
   constructor(private router: Router) {}
 
   tours$: Observable<Tour[]> = collectionData(collection(this.fs, 'tours'), {
     idField: 'id',
   }).pipe(
     map((list) =>
-      (list as Tour[])
-        .sort((a, b) => (a.date ?? '').localeCompare(b.date ?? ''))
+      (list as Tour[]).sort((a, b) =>
+        (a.date ?? '').localeCompare(b.date ?? '')
+      )
     )
   );
 
