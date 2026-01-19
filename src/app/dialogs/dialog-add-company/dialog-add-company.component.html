@@ -4,11 +4,11 @@
   <mat-dialog-content class="dialog-main-container">
     <div class="dialog-name-container">
       <mat-form-field appearance="outline" class="mrg-16 mrgt-16">
-        <mat-label>First Name</mat-label>
+        <mat-label>Vorname</mat-label>
         <input [disabled]="loading" [(ngModel)]="company.firstName" matInput />
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Last Name</mat-label>
+        <mat-label>Nachname</mat-label>
         <input [disabled]="loading" [(ngModel)]="company.lastName" matInput />
       </mat-form-field>
     </div>
@@ -26,7 +26,7 @@
     </div>
     <div>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Birth Date</mat-label>
+        <mat-label>Geburtsdatum</mat-label>
         <input
           [disabled]="loading"
           [(ngModel)]="company.birthDate"
@@ -43,41 +43,39 @@
     </div>
     <div>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Street + House No.</mat-label>
+        <mat-label>Straße + Hausnummer</mat-label>
         <input [disabled]="loading" [(ngModel)]="company.street" matInput />
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="mrg-16">
-        <mat-label>Zip Code</mat-label>
+        <mat-label>Postleitzahl</mat-label>
         <input [disabled]="loading" [(ngModel)]="company.zipCode" matInput />
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>City</mat-label>
+        <mat-label>Stadt</mat-label>
         <input [disabled]="loading" [(ngModel)]="company.city" matInput />
       </mat-form-field>
     </div>
   </mat-dialog-content>
-  <mat-dialog-actions>
-    <div class="dialog-btn-container">
+
+  <mat-dialog-actions class="action-btn" align="end">
       <button
-        class="close-btn"
         (click)="closeDialog()"
         [disabled]="loading"
-        matButton
+        mat-button
         (click)="onNoClick()"
       >
-        Cancel
+        Abbrechen
       </button>
       <button
-        class="save-btn"
-        matButton
+        mat-flat-button 
+        color="primary"
         [disabled]="loading"
         (click)="saveCompany()"
         cdkFocusInitial
       >
-        Save
+        Speichern
       </button>
-    </div>
   </mat-dialog-actions>
 </div>

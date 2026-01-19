@@ -10,6 +10,7 @@ import { inject } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dialog-add-user',
@@ -22,6 +23,7 @@ import { MatDialogRef } from '@angular/material/dialog';
     FormsModule,
     MatProgressBarModule,
     CommonModule,
+    MatButtonModule,
   ],
   templateUrl: './dialog-add-company.component.html',
   styleUrl: './dialog-add-company.component.scss',
