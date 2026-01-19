@@ -15,6 +15,7 @@ import {
   collectionData,
 } from '@angular/fire/firestore';
 import { Company } from '../../models/company.class';
+import { User } from '../../models/user.class';
 import { MatSelectModule } from '@angular/material/select';
 import { Observable } from 'rxjs';
 
@@ -42,7 +43,7 @@ export class DialogAddTourComponent {
 
   name = '';
   company = '';
-  person = '';
+  user = '';
   date: Date | null = null;
   startTime = '';
   endTime = '';
@@ -52,17 +53,27 @@ export class DialogAddTourComponent {
   errorMsg = '';
 
   companies$!: Observable<Company[]>;
+  users$!: Observable<User[]>;
   selectedCompany: Company | null = null;
+  selectedUser: User | null = null;
 
   ngOnInit() {
     const companyRef = collection(this.fs, 'companies');
     this.companies$ = collectionData(companyRef, {
       idField: 'id',
     }) as Observable<Company[]>;
+
+    const usersRef = collection(this.fs, 'users');
+    this.users$ = collectionData(usersRef, { idField: 'id' }) as Observable<
+      User[]
+    >;
   }
 
   // für mat-select (Objekte vergleichen)
   compareCompany = (a: Company | null, b: Company | null) =>
+    a && b ? a.id === b.id : a === b;
+
+  compareUser = (a: User | null, b: User | null) =>
     a && b ? a.id === b.id : a === b;
 
   async save() {
@@ -71,7 +82,7 @@ export class DialogAddTourComponent {
     if (
       !this.name.trim() ||
       !this.selectedCompany ||
-      !this.person.trim() ||
+      !this.selectedUser ||
       !this.date ||
       !this.startTime ||
       !this.endTime
@@ -92,8 +103,9 @@ export class DialogAddTourComponent {
         name: this.name.trim(),
         companyId: this.selectedCompany.id,
         company: this.selectedCompany.company,
-        person: this.person.trim(),
-        date: dateString, // ✅ korrekt lokal
+        userId: this.selectedUser.id,
+        user: `${this.selectedUser.firstName} ${this.selectedUser.lastName}`,
+        date: dateString,
         startTime: this.startTime,
         endTime: this.endTime,
         note: this.note.trim() || null,

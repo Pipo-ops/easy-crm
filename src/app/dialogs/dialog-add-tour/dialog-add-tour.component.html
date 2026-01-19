@@ -22,8 +22,17 @@
 
   <div class="grid">
     <mat-form-field appearance="outline">
-      <mat-label>Person</mat-label>
-      <input matInput [(ngModel)]="person" [disabled]="loading" />
+      <mat-label>User</mat-label>
+      <mat-select
+      [(ngModel)]="selectedUser"
+      [compareWith]="compareUser"
+      [disabled]="loading"
+    >
+      <mat-option [value]="null">- User wählen -</mat-option>
+      <mat-option *ngFor="let u of (users$ | async) ?? []" [value]="u">
+        {{ u.firstName }} {{ u.lastName }}
+      </mat-option>
+    </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">

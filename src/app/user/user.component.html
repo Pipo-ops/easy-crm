@@ -1,0 +1,19 @@
+<mat-card *ngIf="allUsers$ | async as allUsers">
+  <table class="user-table">
+    <tr>
+      <th></th>
+      <th>User</th>
+      <th>E-Mail</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let user of allUsers" (click)="goToUser(user.id)">
+      <td>{{ user.user }}</td>
+      <td>{{ user.firstName }} {{ user.lastName }}</td>
+      <td>{{ user.email }}</td>
+    </tr>
+  </table>
+</mat-card>
+
+<button mat-fab color="primary" matTooltip="Kunden Hinzufügen" matTooltipPosition="above" class="add-fab" (click)="openDialog()">
+  <mat-icon>add</mat-icon>
+</button>
