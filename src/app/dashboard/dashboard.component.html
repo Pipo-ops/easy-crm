@@ -17,7 +17,7 @@
     </div>
 
     <!-- KPI2: Nächste Tour -->
-    <div class="kpi-card" *ngIf="stats$ | async as s">
+    <div class="kpi-card kpi-compact" *ngIf="stats$ | async as s">
       <div class="kpi-title">Nächste Tour</div>
       <ng-container *ngIf="s.nextTour; else noneNext">
         <div class="big">{{ s.nextTour!.title }}</div>
@@ -33,8 +33,30 @@
       </ng-template>
     </div>
 
-    <!-- KPI3: Diese Woche -->
-    <div class="kpi-card" *ngIf="stats$ | async as s">
+    <!-- KPI3: Monatsübersicht (NEU) -->
+    <div class="kpi-card kpi-compact" *ngIf="stats$ | async as s">
+      <div class="kpi-title">Monatsübersicht</div>
+
+      <div class="kpi-lines">
+        <div class="kpi-line">
+          <span>📦 Touren im Monat</span>
+          <b>{{ s.monthCount }}</b>
+        </div>
+
+        <div class="kpi-line">
+          <span>🚚 Ø LKW-Auslastung</span>
+          <b>{{ s.avgTruckUtilPctMonth }}%</b>
+        </div>
+
+        <div class="kpi-line">
+          <span>⏱ Ø Dauer pro Tour</span>
+          <b>{{ formatMinutesToHm(s.avgTourDurationMinMonth) }}</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI4: Diese Woche -->
+    <div class="kpi-card kpi-compact" *ngIf="stats$ | async as s">
       <div class="kpi-title">Diese Woche</div>
       <div class="big">{{ s.weekCount }}</div>
       <div class="kpi-sub">Touren (Mo–So)</div>
@@ -119,9 +141,15 @@
 
           <!-- Nächste 7 Tage -->
           <ng-container *ngIf="scopeTrucks === 'today'; else monthView">
-            <div class="list-item" *ngFor="let d of s.trucksNext7Days">
+            <div
+              class="list-item"
+              *ngFor="let d of s.trucksNext7Days"
+              (click)="
+                jumpToDate(d.date, 'timeGridDay'); $event.stopPropagation()
+              "
+            >
               <div class="li-title">
-                {{ d.date | date:'EEEE dd.MM.yyyy':'':'de' }}
+                {{ d.date | date : "EEEE dd.MM.yyyy" : "" : "de" }}
               </div>
               <div class="li-sub">{{ d.used }} / {{ d.total }} LKW</div>
             </div>
@@ -133,9 +161,15 @@
 
           <!-- Monat -->
           <ng-template #monthView>
-            <div class="list-item" *ngFor="let d of s.trucksMonthDays">
+            <div
+              class="list-item"
+              *ngFor="let d of s.trucksMonthDays"
+              (click)="
+                jumpToDate(d.date, 'timeGridDay'); $event.stopPropagation()
+              "
+            >
               <div class="li-title">
-                {{ d.date | date:'EEEE dd.MM.yyyy':'':'de' }}
+                {{ d.date | date : "EEEE dd.MM.yyyy" : "" : "de" }}
               </div>
               <div class="li-sub">{{ d.used }} / {{ d.total }} LKW</div>
             </div>

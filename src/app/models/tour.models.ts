@@ -21,6 +21,9 @@ export type Truck = {
   width?: number;      // m
   area?: number;       // m²
   maxWeight?: number;  // kg
+
+  isExtra?: boolean;   // extra truck not linked to a tour
+  tourId?: string;     // extra truck not linked to a tour
 };
 
 export type Category = {

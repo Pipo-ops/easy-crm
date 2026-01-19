@@ -9,6 +9,8 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Article, Category, Tour, Truck } from '../../models/tour.models';
+import { addDoc } from '@angular/fire/firestore';
+import { combineLatest, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TourDetailDataService {
@@ -37,5 +39,24 @@ export class TourDetailDataService {
   saveTourState(tourId: string, payload: Partial<Tour>) {
     const ref = doc(this.fs, 'tours', tourId);
     return updateDoc(ref, payload);
+  }
+
+  extraTrucks$(tourId: string): Observable<Truck[]> {
+    const ref = collection(this.fs, `tours/${tourId}/extraTrucks`);
+    return collectionData(ref, { idField: 'id' }) as Observable<Truck[]>;
+  }
+
+  allTrucksForTour$(tourId: string): Observable<Truck[]> {
+    return combineLatest([this.trucks$(), this.extraTrucks$(tourId)]).pipe(
+      map(([global, extra]) => [
+        ...global.map((t) => ({ ...t, isExtra: false })),
+        ...extra.map((t) => ({ ...t, isExtra: true, tourId })),
+      ])
+    );
+  }
+
+  addExtraTruck(tourId: string, truck: Omit<Truck, 'id'>) {
+    const ref = collection(this.fs, `tours/${tourId}/extraTrucks`);
+    return addDoc(ref, { ...truck, createdAt: Date.now() });
   }
 }

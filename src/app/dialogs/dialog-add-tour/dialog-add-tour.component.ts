@@ -43,7 +43,7 @@ export class DialogAddTourComponent {
   name = '';
   company = '';
   person = '';
-  date: Date | null = null; 
+  date: Date | null = null;
   startTime = '';
   endTime = '';
   note = '';
@@ -70,7 +70,7 @@ export class DialogAddTourComponent {
 
     if (
       !this.name.trim() ||
-      !this.selectedCompany || 
+      !this.selectedCompany ||
       !this.person.trim() ||
       !this.date ||
       !this.startTime ||
@@ -83,14 +83,17 @@ export class DialogAddTourComponent {
     this.loading = true;
 
     try {
-      const dateString = this.date.toISOString().split('T')[0]; // YYYY-MM-DD
+      const d = this.date; // Date
+      const dateString = `${d.getFullYear()}-${String(
+        d.getMonth() + 1
+      ).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
       await addDoc(collection(this.fs, 'tours'), {
         name: this.name.trim(),
-        companyId: this.selectedCompany.id,    
-        company: this.selectedCompany.company, 
+        companyId: this.selectedCompany.id,
+        company: this.selectedCompany.company,
         person: this.person.trim(),
-        date: dateString,
+        date: dateString, // ✅ korrekt lokal
         startTime: this.startTime,
         endTime: this.endTime,
         note: this.note.trim() || null,
