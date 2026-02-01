@@ -1,13 +1,29 @@
 {
   "name": "easy-crm",
   "version": "0.0.0",
+  "main": "electron/main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:easy-crm": "node dist/easy-crm/server/server.mjs"
+    "build:electron": "ng build --configuration production --base-href ./",
+    "electron": "electron .",
+    "serve:ssr:easy-crm": "node dist/easy-crm/server/server.mjs",
+    "dist": "npm run build:electron && electron-builder"
+  },
+  "build": {
+    "appId": "com.deinname.easycrm",
+    "productName": "Easy CRM",
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    }
   },
   "private": true,
   "dependencies": {
@@ -44,6 +60,8 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
     "@types/three": "^0.181.0",
+    "electron": "^40.0.0",
+    "electron-builder": "^23.0.6",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
