@@ -1,20 +1,23 @@
 <div class="tour-list" *ngIf="tours$ | async as tours">
   <mat-card class="tour-card" *ngFor="let t of tours" (click)="openTour(t.id)">
-    <!-- Header mit Aktionen (wie Category) -->
     <div class="card-header">
+      <button
+        mat-icon-button
+        aria-label="Bearbeiten"
+        (click)="editTour(t); $event.stopPropagation()"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
       <div class="title">{{ t.name | shortText : 15 }}</div>
-      <div class="actions">
-        <button
-          mat-icon-button
-          aria-label="Löschen"
-          (click)="deleteTour(t); $event.stopPropagation()"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
+      <button
+        mat-icon-button
+        aria-label="Löschen"
+        (click)="deleteTour(t); $event.stopPropagation()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
 
-    <!-- “Hero”-Zeile/ Bildbereich lassen wir frei; Design wie Category: Bildslot -->
     <div
       class="noimg"
       [style.background]="companyColor(t.company)"
@@ -23,13 +26,12 @@
       <div class="noimg-name">{{ t.company | shortText : 15 }}</div>
     </div>
 
-    <!-- Footer mit Details -->
     <div class="card-footer">
       <div class="row">
         <span><mat-icon inline>event</mat-icon> {{ t.date }}</span>
         <span
           ><mat-icon inline>person</mat-icon>
-          {{ t.person | shortText : 10 }}</span
+          {{ (t.user || t.person) | shortText : 10 }}</span
         >
       </div>
       <div class="row">

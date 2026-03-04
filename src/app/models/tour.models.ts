@@ -1,14 +1,17 @@
 export type Tour = {
   id: string;
-  companyId: string;
+  companyId?: string | null;
   company: string;
   name: string;
-  person: string;
+  person?: string;
+  user?: string;
+  userId?: string;
   date: string;
   startTime: string;
   endTime: string;
   note?: string | null;
   createdAt?: number;
+
   boxes?: Box[];
   confirmedTruckIds?: string[];
 };

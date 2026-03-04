@@ -18,6 +18,7 @@ import {
 import { map, Observable } from 'rxjs';
 
 import { DialogAddTourComponent } from '../dialogs/dialog-add-tour/dialog-add-tour.component';
+import { DialogEditTourComponent } from '../dialogs/dialog-edit-tour/dialog-edit-tour.component';
 
 type Tour = {
   id: string;
@@ -29,6 +30,9 @@ type Tour = {
   endTime: string; // 'HH:mm'
   note?: string;
   createdAt?: number;
+  companyId?: string | null;
+  user: string;
+  userId: string;
 };
 
 @Component({
@@ -81,7 +85,7 @@ export class TruckRoutesComponent {
 
   companyColor(company?: string): string {
     const letter = (company ?? '').trim().charAt(0).toUpperCase();
-    return this.LETTER_COLORS[letter] ?? '#9CA3AF'; 
+    return this.LETTER_COLORS[letter] ?? '#9CA3AF';
   }
 
   companyTextColor(bgHex: string): '#111827' | '#ffffff' {
@@ -105,11 +109,17 @@ export class TruckRoutesComponent {
   tours$: Observable<Tour[]> = collectionData(collection(this.fs, 'tours'), {
     idField: 'id',
   }).pipe(
+    map(
+      (list) =>
+        (list as any[]).map((t) => ({
+          ...t,
+          user: t.user ?? t.person ?? '',
+          userId: t.userId ?? '',
+        })) as Tour[],
+    ),
     map((list) =>
-      (list as Tour[]).sort((a, b) =>
-        (a.date ?? '').localeCompare(b.date ?? '')
-      )
-    )
+      list.sort((a, b) => (a.date ?? '').localeCompare(b.date ?? '')),
+    ),
   );
 
   startNewTour() {
@@ -123,5 +133,13 @@ export class TruckRoutesComponent {
 
   openTour(id: string) {
     this.router.navigate(['/tour', id]);
+  }
+
+  editTour(t: Tour) {
+    const ref = this.dialog.open(DialogEditTourComponent, {
+      width: '520px',
+      data: t,
+    });
+    ref.afterClosed().subscribe((ok) => {});
   }
 }
