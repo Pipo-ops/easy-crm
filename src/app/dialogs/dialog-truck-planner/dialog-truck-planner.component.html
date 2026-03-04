@@ -3,8 +3,8 @@
 <mat-dialog-content class="planner-content">
   <div class="status">
     Ladefläche:
-    {{ truckLength | number : "1.2-2" }} m (Länge) x
-    {{ truckWidth | number : "1.2-2" }} m (Breite) | Kisten im LKW:
+    {{ truckLength | number: "1.2-2" }} m (Länge) x
+    {{ truckWidth | number: "1.2-2" }} m (Breite) | Kisten im LKW:
     {{ crates.length }} | Nicht platziert: {{ overflowCrates.length }}
   </div>
 
@@ -17,14 +17,17 @@
     >
       Ausgewählte drehen
     </button>
-    <div class="hint">
-      Tipp: Kisten im 2D mit Maus ziehen. Kollisionen werden blockiert.
-    </div>
+    <div class="hint">Tipp: Kisten können zwischengelagert werden.</div>
   </div>
 
   <section class="canvas-block">
     <h3>2D Draufsicht (Kisten ziehen mit Maus)</h3>
     <canvas #canvas2d class="canvas-2d"></canvas>
+  </section>
+
+  <section class="canvas-block">
+    <h3>2D Ablagefläche (Parkplatz für Kisten ohne Platz)</h3>
+    <canvas #canvasOverflow class="canvas-2d"></canvas>
   </section>
 
   <section class="canvas-block">
@@ -43,7 +46,7 @@
         <div class="meta">
           <div class="name">{{ c.name }}</div>
           <div class="dims">
-            {{ c.w_m | number : "1.2-2" }}m x {{ c.h_m | number : "1.2-2" }}m
+            {{ c.w_m | number: "1.2-2" }}m x {{ c.h_m | number: "1.2-2" }}m
           </div>
         </div>
         <button

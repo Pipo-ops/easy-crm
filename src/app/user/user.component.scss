@@ -1,0 +1,50 @@
+.add-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+    &:first-child {
+      cursor: unset;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    cursor: pointer;
+
+    td {
+      height: 48px;
+
+      &:first-child {
+        padding-left: 16px;
+      }
+    }
+
+    th {
+      &:first-child {
+        padding-left: 16px;
+      }
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  th {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 20px;
+    font-weight: 500;
+    text-align: start;
+    height: 48px;
+  }
+}

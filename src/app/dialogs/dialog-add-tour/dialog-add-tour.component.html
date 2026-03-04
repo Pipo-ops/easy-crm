@@ -6,24 +6,44 @@
     <input matInput [(ngModel)]="name" [disabled]="loading" />
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full">
-    <mat-label>Firma</mat-label>
-    <mat-select
-      [(ngModel)]="selectedCompany"
-      [compareWith]="compareCompany"
-      [disabled]="loading"
-    >
-      <mat-option [value]="null">- Firma wählen -</mat-option>
-      <mat-option *ngFor="let c of (companies$ | async) ?? []" [value]="c">
-        {{ c.company }} - {{ c.firstName }} {{ c.lastName }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+ <mat-form-field appearance="outline" class="full">
+  <mat-label>Firma</mat-label>
+
+  <input
+    type="text"
+    matInput
+    [matAutocomplete]="autoCompany"
+    [(ngModel)]="companyInput"
+    [disabled]="loading"
+    placeholder="Firma suchen oder neu eingeben"
+    (ngModelChange)="onCompanyInputChange()"
+  />
+
+  <mat-autocomplete
+    #autoCompany="matAutocomplete"
+    [displayWith]="displayCompany"
+    (optionSelected)="onCompanySelected($event.option.value)"
+  >
+    <mat-option *ngFor="let c of filteredCompanies" [value]="c">
+      {{ c.company }} - {{ c.firstName }} {{ c.lastName }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
 
   <div class="grid">
     <mat-form-field appearance="outline">
-      <mat-label>Person</mat-label>
-      <input matInput [(ngModel)]="person" [disabled]="loading" />
+      <mat-label>User</mat-label>
+      <mat-select
+      [(ngModel)]="selectedUser"
+      [compareWith]="compareUser"
+      [disabled]="loading"
+    >
+      <mat-option [value]="null">- User wählen -</mat-option>
+      <mat-option *ngFor="let u of (users$ | async) ?? []" [value]="u">
+        {{ u.firstName }} {{ u.lastName }}
+      </mat-option>
+    </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">

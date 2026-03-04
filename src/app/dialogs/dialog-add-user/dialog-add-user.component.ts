@@ -3,16 +3,17 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { Company } from '../../models/company.class';
+import { User} from '../../models/user.class';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-dialog-add-company',
+  selector: 'app-dialog-add-user',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -22,14 +23,15 @@ import { MatDialogRef } from '@angular/material/dialog';
     FormsModule,
     MatProgressBarModule,
     CommonModule,
+    MatButtonModule,
   ],
-  templateUrl: './dialog-add-company.component.html',
-  styleUrl: './dialog-add-company.component.scss',
+  templateUrl: './dialog-add-user.component.html',
+  styleUrl: './dialog-add-user.component.scss'
 })
-export class DialogAddCompanyComponent {
-  firestore: Firestore = inject(Firestore);
+export class DialogAddUserComponent {
+ firestore: Firestore = inject(Firestore);
 
-  company = new Company();
+  user = new User();
   birthDate: Date;
   loading = false;
 
@@ -45,8 +47,6 @@ export class DialogAddCompanyComponent {
 
     this.user.firstName = this.capitalize(this.user.firstName);
     this.user.lastName = this.capitalize(this.user.lastName);
-    this.user.street = this.capitalize(this.user.street);
-    this.user.city = this.capitalize(this.user.city);
 
     try {
       const userCollection = collection(this.firestore, 'users');

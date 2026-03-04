@@ -3,7 +3,7 @@ import { Box, Truck } from '../../models/tour.models';
 
 @Injectable({ providedIn: 'root' })
 export class TourDetailPrintService {
-  printConfirmedTrucks(
+  async printConfirmedTrucks(
     confirmedTrucks: Truck[],
     boxes: Box[],
     helpers: {
@@ -15,34 +15,38 @@ export class TourDetailPrintService {
       isTruckOverloaded: (t: Truck) => boolean;
     },
     title = 'Tour Übersicht'
-  ) {
+  ): Promise<boolean> {
     if (!confirmedTrucks.length) {
       alert('Bitte zuerst LKW Auswahl übernehmen.');
-      return;
+      return false;
     }
 
-    const html = this.buildHtml(
-      title,
-      confirmedTrucks,
-      boxes,
-      helpers
-    );
+    const html = this.buildHtml(title, confirmedTrucks, boxes, helpers);
 
+    // ✅ Electron
+    if (window.desktop?.printHtml) {
+      const ok = await window.desktop.printHtml(html, { landscape: false });
+      return !!ok;
+    }
+
+    // 🌐 Browser Fallback
     const w = window.open('', '_blank', 'width=900,height=700');
     if (!w) {
       alert('Pop-up blockiert. Bitte Pop-ups erlauben.');
-      return;
+      return false;
     }
 
     w.document.open();
     w.document.write(html);
     w.document.close();
 
+    // Browser print ist nicht zuverlässig "await"-bar → wir geben true zurück sobald Fenster geöffnet wurde
     w.onload = () => {
       w.focus();
       w.print();
-      // w.close(); // optional
     };
+
+    return true;
   }
 
   // --------------------------------------------------
@@ -93,12 +97,18 @@ export class TourDetailPrintService {
           <h2>${escape(t.name ?? 'LKW')}</h2>
 
           <div class="meta">
-            <div><b>Kapazität:</b> ${capA.toFixed(2)} m² · ${capW.toFixed(0)} kg</div>
-            <div><b>Beladen:</b> ${loadA.toFixed(2)} m² · ${loadW.toFixed(0)} kg</div>
+            <div><b>Kapazität:</b> ${capA.toFixed(2)} m² · ${capW.toFixed(
+          0
+        )} kg</div>
+            <div><b>Beladen:</b> ${loadA.toFixed(2)} m² · ${loadW.toFixed(
+          0
+        )} kg</div>
             <div><b>Status:</b>
-              ${overloaded
-                ? '<span class="badTxt">ÜBERLADEN</span>'
-                : '<span class="okTxt">OK</span>'}
+              ${
+                overloaded
+                  ? '<span class="badTxt">ÜBERLADEN</span>'
+                  : '<span class="okTxt">OK</span>'
+              }
             </div>
           </div>
 

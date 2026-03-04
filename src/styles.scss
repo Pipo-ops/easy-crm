@@ -39,36 +39,6 @@ body {
   gap: 16px;
   width: 100%;
 }
-
-.close-btn {
-  background-color: red;
-  color: white;
-  border-color: red;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 18px;
-  width: 100px;
-
-  &:hover {
-    background-color: darkred;
-    border-color: darkred;
-  }
-}
-
-.save-btn {
-  background-color: #0c59be;
-  color: white;
-  border-color: #0c59be;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 18px;
-  width: 100px;
-
-  &:hover {
-    background-color: #084a8f;
-    border-color: #084a8f;
-  }
-}
 /* dialog*/
 
 /* nunito-regular - latin */

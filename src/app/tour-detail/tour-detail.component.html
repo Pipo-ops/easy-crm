@@ -104,6 +104,13 @@
         <mat-card-title class="card-title-center"
           >Verfügbare LKWs</mat-card-title
         >
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="addExtraTruckQuick(); $event.stopPropagation()"
+        >
+          + Extra LKW für diese Tour
+        </button>
         <mat-card-content>
           <section
             class="truck-strip"

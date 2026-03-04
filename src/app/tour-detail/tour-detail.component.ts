@@ -110,7 +110,10 @@ export class TourDetailComponent {
     );
 
     this.categories$ = this.data.categories$();
-    this.trucks$ = this.data.trucks$();
+    this.trucks$ = this.route.paramMap.pipe(
+      map((p) => p.get('id')),
+      switchMap((id) => (id ? this.data.allTrucksForTour$(id) : of([])))
+    );
   }
 
   private setupTourSubscription(): void {
@@ -350,6 +353,33 @@ export class TourDetailComponent {
 
     return areaTooMuch || weightTooMuch;
   }
+  // ---------- extra truck ----------
+  async addExtraTruckQuick() {
+    if (!this.tourId) return;
+
+    const name = prompt('Name vom Extra-LKW (z.B. Spedition 1):');
+    if (!name?.trim()) return;
+
+    const lengthStr = prompt('Länge in m (z.B. 8):', '8');
+    const widthStr = prompt('Breite in m (z.B. 2.5):', '2.5');
+    const maxWStr = prompt('Max Gewicht in kg (z.B. 12000):', '12000');
+
+    const length = Number(lengthStr);
+    const width = Number(widthStr);
+    const maxWeight = Number(maxWStr);
+
+    await this.data.addExtraTruck(this.tourId, {
+      name: name.trim(),
+      length: Number.isFinite(length) ? length : undefined,
+      width: Number.isFinite(width) ? width : undefined,
+      maxWeight: Number.isFinite(maxWeight) ? maxWeight : undefined,
+      area:
+        Number.isFinite(length) && Number.isFinite(width)
+          ? +(length * width).toFixed(2)
+          : undefined,
+      image: null as any, // optional
+    });
+  }
 
   // ---------- Save / AutoAssign / Planner ----------
   async saveTourState() {
@@ -408,7 +438,9 @@ export class TourDetailComponent {
     }
 
     if (pool.length) {
-      alert(`Nicht alles passt in die ausgewählten LKWs. Übrig: ${pool.length} Kisten.`);
+      alert(
+        `Nicht alles passt in die ausgewählten LKWs. Übrig: ${pool.length} Kisten.`
+      );
     }
 
     this.recalcTotals();
@@ -441,18 +473,18 @@ export class TourDetailComponent {
   }
 
   printConfirmedTrucks() {
-  this.printService.printConfirmedTrucks(
-    this.confirmedTrucks,
-    this.boxes,
-    {
-      boxesForTruck: (t) => this.boxesForTruck(t),
-      truckCapacityArea: (t) => this.truckCapacityArea(t),
-      truckCapacityWeight: (t) => this.truckCapacityWeight(t),
-      truckLoadedArea: (t) => this.truckLoadedArea(t),
-      truckLoadedWeight: (t) => this.truckLoadedWeight(t),
-      isTruckOverloaded: (t) => this.isTruckOverloaded(t),
-    },
-    'Tour Übersicht'
-  );
-}
+    this.printService.printConfirmedTrucks(
+      this.confirmedTrucks,
+      this.boxes,
+      {
+        boxesForTruck: (t) => this.boxesForTruck(t),
+        truckCapacityArea: (t) => this.truckCapacityArea(t),
+        truckCapacityWeight: (t) => this.truckCapacityWeight(t),
+        truckLoadedArea: (t) => this.truckLoadedArea(t),
+        truckLoadedWeight: (t) => this.truckLoadedWeight(t),
+        isTruckOverloaded: (t) => this.isTruckOverloaded(t),
+      },
+      'Tour Übersicht'
+    );
+  }
 }

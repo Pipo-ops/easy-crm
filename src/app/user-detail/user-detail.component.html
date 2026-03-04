@@ -1,0 +1,30 @@
+<mat-card
+  class="user-detail-header"
+  *ngIf="user; else loading"
+>
+  <div class="user-detail-header-container">
+    <button mat-icon-button class="pin-right-upper-corner" [matMenuTriggerFor]="userMenu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu" class="mrg-16">
+      <button mat-menu-item (click)="editUserDetail()">Edit</button>
+      <button mat-menu-item class="delete-btn" (click)="deleteUserDetail()">Delete</button>
+    </mat-menu>  
+    <div>
+      <img
+        class="profil-img"
+        src="./../../assets/img/profil-img/user-icon.png"
+        alt=""
+      />
+    </div>
+    <div class="user-detail-header-text">
+      
+      <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+      <span>{{ user.email }}</span>
+    </div>
+  </div>
+</mat-card>
+
+<ng-template #loading>
+  <p>Loading User...</p>
+</ng-template>

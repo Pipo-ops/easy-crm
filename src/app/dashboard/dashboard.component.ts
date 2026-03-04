@@ -130,6 +130,22 @@ export class DashboardComponent {
     // optional: api.today();
   }
 
+  jumpToDate(
+    date: Date,
+    view: 'dayGridMonth' | 'timeGridDay' | 'timeGridWeek' = 'timeGridDay'
+  ) {
+    if (!this.isBrowser) return;
+
+    const api = this.fc?.getApi();
+    if (!api) return;
+
+    api.gotoDate(date);
+    api.changeView(view);
+
+    // nach View-Wechsel Größe korrigieren (hilft bei Grid/Fullscreen)
+    setTimeout(() => api.updateSize(), 0);
+  }
+
   private escapeHtml(s: string) {
     return s
       .replaceAll('&', '&amp;')
@@ -137,5 +153,12 @@ export class DashboardComponent {
       .replaceAll('>', '&gt;')
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#039;');
+  }
+
+  formatMinutesToHm(min: number): string {
+    if (!min || min <= 0) return '–';
+    const h = Math.floor(min / 60);
+    const m = min % 60;
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
   }
 }

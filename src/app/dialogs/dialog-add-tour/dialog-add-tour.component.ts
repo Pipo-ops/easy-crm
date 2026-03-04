@@ -15,8 +15,10 @@ import {
   collectionData,
 } from '@angular/fire/firestore';
 import { Company } from '../../models/company.class';
+import { User } from '../../models/user.class';
 import { MatSelectModule } from '@angular/material/select';
 import { Observable } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-dialog-add-tour',
@@ -32,6 +34,7 @@ import { Observable } from 'rxjs';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './dialog-add-tour.component.html',
   styleUrl: './dialog-add-tour.component.scss',
@@ -42,8 +45,8 @@ export class DialogAddTourComponent {
 
   name = '';
   company = '';
-  person = '';
-  date: Date | null = null; 
+  user = '';
+  date: Date | null = null;
   startTime = '';
   endTime = '';
   note = '';
@@ -52,26 +55,77 @@ export class DialogAddTourComponent {
   errorMsg = '';
 
   companies$!: Observable<Company[]>;
+  users$!: Observable<User[]>;
   selectedCompany: Company | null = null;
+  selectedUser: User | null = null;
+  companyInput: string | Company = '';
+  filteredCompanies: Company[] = [];
+  allCompanies: Company[] = [];
 
   ngOnInit() {
     const companyRef = collection(this.fs, 'companies');
     this.companies$ = collectionData(companyRef, {
       idField: 'id',
     }) as Observable<Company[]>;
+
+    this.companies$.subscribe((list) => {
+      this.allCompanies = list;
+      this.filteredCompanies = list;
+    });
+
+    const usersRef = collection(this.fs, 'users');
+    this.users$ = collectionData(usersRef, { idField: 'id' }) as Observable<
+      User[]
+    >;
   }
 
-  // für mat-select (Objekte vergleichen)
-  compareCompany = (a: Company | null, b: Company | null) =>
+  displayCompany = (c: Company | string | null) => {
+    if (!c) return '';
+    return typeof c === 'string' ? c : c.company;
+  };
+
+  onCompanySelected(c: Company) {
+    this.selectedCompany = c;
+    this.companyInput = c; // damit displayWith greift
+  }
+
+  onCompanyInputChange() {
+    const q =
+      typeof this.companyInput === 'string'
+        ? this.companyInput.toLowerCase().trim()
+        : (this.companyInput.company ?? '').toLowerCase().trim();
+
+    this.filteredCompanies = this.allCompanies.filter(
+      (c) =>
+        (c.company ?? '').toLowerCase().includes(q) ||
+        (c.firstName ?? '').toLowerCase().includes(q) ||
+        (c.lastName ?? '').toLowerCase().includes(q),
+    );
+
+    // wenn user tippt -> selectedCompany zurücksetzen
+    if (typeof this.companyInput === 'string') {
+      this.selectedCompany = null;
+    }
+  }
+
+  compareUser = (a: User | null, b: User | null) =>
     a && b ? a.id === b.id : a === b;
 
   async save() {
     this.errorMsg = '';
 
+    const typedCompany =
+      typeof this.companyInput === 'string' ? this.companyInput.trim() : '';
+
+    const chosenCompany =
+      typeof this.companyInput !== 'string'
+        ? this.companyInput
+        : this.selectedCompany;
+
     if (
       !this.name.trim() ||
-      !this.selectedCompany || 
-      !this.person.trim() ||
+      (!chosenCompany && !typedCompany) ||
+      !this.selectedUser ||
       !this.date ||
       !this.startTime ||
       !this.endTime
@@ -83,13 +137,20 @@ export class DialogAddTourComponent {
     this.loading = true;
 
     try {
-      const dateString = this.date.toISOString().split('T')[0]; // YYYY-MM-DD
+      const d = this.date;
+      const dateString = `${d.getFullYear()}-${String(
+        d.getMonth() + 1,
+      ).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
       await addDoc(collection(this.fs, 'tours'), {
         name: this.name.trim(),
-        companyId: this.selectedCompany.id,    
-        company: this.selectedCompany.company, 
-        person: this.person.trim(),
+
+        companyId: chosenCompany?.id ?? null,
+        company: chosenCompany?.company ?? typedCompany,
+
+        userId: this.selectedUser.id,
+        user: `${this.selectedUser.firstName} ${this.selectedUser.lastName}`,
+
         date: dateString,
         startTime: this.startTime,
         endTime: this.endTime,
