@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>Tour bearbeiten</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Tourname</mat-label>
+    <input matInput [(ngModel)]="name" [disabled]="loading" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Firma</mat-label>
+
+    <input
+      type="text"
+      matInput
+      [matAutocomplete]="autoCompany"
+      [(ngModel)]="companyInput"
+      [disabled]="loading"
+      placeholder="Firma suchen oder neu eingeben"
+      (ngModelChange)="onCompanyInputChange()"
+    />
+
+    <mat-autocomplete
+      #autoCompany="matAutocomplete"
+      [displayWith]="displayCompany"
+      (optionSelected)="onCompanySelected($event.option.value)"
+    >
+      <mat-option *ngFor="let c of filteredCompanies" [value]="c">
+        {{ c.company }} - {{ c.firstName }} {{ c.lastName }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <div class="grid">
+    <mat-form-field appearance="outline">
+      <mat-label>User</mat-label>
+      <mat-select
+        [(ngModel)]="selectedUser"
+        [compareWith]="compareUser"
+        [disabled]="loading"
+      >
+        <mat-option [value]="null">- User wählen -</mat-option>
+        <mat-option *ngFor="let u of (users$ | async) ?? []" [value]="u">
+          {{ u.firstName }} {{ u.lastName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Datum</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [(ngModel)]="date"
+        [disabled]="loading"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Startzeit</mat-label>
+      <input matInput type="time" [(ngModel)]="startTime" [disabled]="loading" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Endzeit</mat-label>
+      <input matInput type="time" [(ngModel)]="endTime" [disabled]="loading" />
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Notiz</mat-label>
+    <input matInput [(ngModel)]="note" [disabled]="loading" />
+  </mat-form-field>
+
+  <div class="error" *ngIf="errorMsg">{{ errorMsg }}</div>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+</mat-dialog-content>
+
+<mat-dialog-actions class="action-btn" align="end">
+  <button mat-button (click)="close()" [disabled]="loading">Abbrechen</button>
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="loading">
+    Speichern
+  </button>
+</mat-dialog-actions>
